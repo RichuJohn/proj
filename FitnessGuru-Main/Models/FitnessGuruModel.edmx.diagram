@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ac3540f6c61348ff9d1d032102ebd98e" Name="Diagram1" ZoomLevel="64" >
+        <EntityTypeShape EntityType="FitnessGuruModel.GymMember" Width="1.5" PointX="1.875" PointY="1.875" />
+        <EntityTypeShape EntityType="FitnessGuruModel.Session" Width="1.5" PointX="4.875" PointY="1.25" />
+        <AssociationConnector Association="FitnessGuruModel.GymMemberSession" />
+        <AssociationConnector Association="FitnessGuruModel.GymMemberSession1" />
+        <EntityTypeShape EntityType="FitnessGuruModel.SessionFeedback" Width="1.5" PointX="4.875" PointY="4.75" />
+        <AssociationConnector Association="FitnessGuruModel.GymMemberSessionFeedback" />
+        <AssociationConnector Association="FitnessGuruModel.SessionSessionFeedback" />
+        <EntityTypeShape EntityType="FitnessGuruModel.TrainerPersonalAppointmentSession" Width="1.5" PointX="8.5" PointY="4" />
+        <AssociationConnector Association="FitnessGuruModel.GymMemberTrainerPersonalAppointmentSession" />
+        <EntityTypeShape EntityType="FitnessGuruModel.PersonalAppointmentRequest" Width="1.5" PointX="8.25" PointY="0.625" />
+        <AssociationConnector Association="FitnessGuruModel.GymMemberPersonalAppointmentRequest" />
+        <AssociationConnector Association="FitnessGuruModel.PersonalAppointmentRequestTrainerPersonalAppointmentSession" />
+        <EntityTypeShape EntityType="FitnessGuruModel.PartnerGroup" Width="1.5" PointX="9.625" PointY="7.625" />
+        <AssociationConnector Association="FitnessGuruModel.GymMemberPartnerGroup" />
+        <EntityTypeShape EntityType="FitnessGuruModel.GroupJoinRequest" Width="1.5" PointX="12.125" PointY="5.125" />
+        <AssociationConnector Association="FitnessGuruModel.PartnerGroupGroupJoinRequest" />
+        <AssociationConnector Association="FitnessGuruModel.GymMemberGroupJoinRequest" />
+        <AssociationConnector Association="FitnessGuruModel.GymMembersInPartnerGroup" />
+        <EntityTypeShape EntityType="FitnessGuruModel.GroupActivity" Width="1.5" PointX="6.5" PointY="9.875" />
+        <AssociationConnector Association="FitnessGuruModel.PartnerGroupGroupActivity" />
+        <AssociationConnector Association="FitnessGuruModel.GymMemberGroupActivity" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

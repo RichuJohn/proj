@@ -1,0 +1,827 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FitnessGuruModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="GroupActivities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Desc" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ScheduledAt" Type="datetime" Nullable="false" />
+          <Property Name="PartnerGroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupJoinRequests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Desc" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PartnerGroupId" Type="int" Nullable="false" />
+          <Property Name="GymMemberId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GymMemberGroupActivity">
+          <Key>
+            <PropertyRef Name="GymMembers_Id" />
+            <PropertyRef Name="GroupActivities_Id" />
+          </Key>
+          <Property Name="GymMembers_Id" Type="int" Nullable="false" />
+          <Property Name="GroupActivities_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GymMembers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DOB" Type="datetime" Nullable="false" />
+          <Property Name="AddressLine1" Type="nvarchar(max)" />
+          <Property Name="AddressLine2" Type="nvarchar(max)" />
+          <Property Name="ProfilePicPath" Type="nvarchar(max)" />
+          <Property Name="Desc" Type="nvarchar(max)" />
+          <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Gender" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GymMemberSession1">
+          <Key>
+            <PropertyRef Name="GymMembers_Id" />
+            <PropertyRef Name="JoinedSessions_Id" />
+          </Key>
+          <Property Name="GymMembers_Id" Type="int" Nullable="false" />
+          <Property Name="JoinedSessions_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GymMembersInPartnerGroup">
+          <Key>
+            <PropertyRef Name="GymMembers_Id" />
+            <PropertyRef Name="JoinedGroups_Id" />
+          </Key>
+          <Property Name="GymMembers_Id" Type="int" Nullable="false" />
+          <Property Name="JoinedGroups_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PartnerGroups">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Owner" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PersonalAppointmentRequests1">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Desc" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsApproved" Type="bit" Nullable="false" />
+          <Property Name="Feedback" Type="nvarchar(max)" />
+          <Property Name="GymMemberId" Type="int" Nullable="false" />
+          <Property Name="TrainerPersonalAppointmentSession_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SessionFeedbacks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Desc" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Rating" Type="int" Nullable="false" />
+          <Property Name="GymMemberId" Type="int" Nullable="false" />
+          <Property Name="SessionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sessions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SessionName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SessionAt" Type="datetime" Nullable="false" />
+          <Property Name="isCancelled" Type="bit" Nullable="false" />
+          <Property Name="Desc" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TrainerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TrainerPersonalAppointmentSessions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AvailableAt" Type="datetime" Nullable="false" />
+          <Property Name="TrainerId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_GymMemberGroupActivity_GroupActivity">
+          <End Role="GroupActivities" Type="Self.GroupActivities" Multiplicity="1" />
+          <End Role="GymMemberGroupActivity" Type="Self.GymMemberGroupActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GroupActivities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GymMemberGroupActivity">
+              <PropertyRef Name="GroupActivities_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberGroupActivity_GymMember">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="GymMemberGroupActivity" Type="Self.GymMemberGroupActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GymMemberGroupActivity">
+              <PropertyRef Name="GymMembers_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberGroupJoinRequest">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="GroupJoinRequests" Type="Self.GroupJoinRequests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupJoinRequests">
+              <PropertyRef Name="GymMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberPartnerGroup">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="PartnerGroups" Type="Self.PartnerGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PartnerGroups">
+              <PropertyRef Name="Owner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberPersonalAppointmentRequest">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="PersonalAppointmentRequests1" Type="Self.PersonalAppointmentRequests1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonalAppointmentRequests1">
+              <PropertyRef Name="GymMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberSession">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="Sessions" Type="Self.Sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Sessions">
+              <PropertyRef Name="TrainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberSession1_GymMember">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="GymMemberSession1" Type="Self.GymMemberSession1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GymMemberSession1">
+              <PropertyRef Name="GymMembers_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberSession1_Session">
+          <End Role="Sessions" Type="Self.Sessions" Multiplicity="1" />
+          <End Role="GymMemberSession1" Type="Self.GymMemberSession1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sessions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GymMemberSession1">
+              <PropertyRef Name="JoinedSessions_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberSessionFeedback">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="SessionFeedbacks" Type="Self.SessionFeedbacks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SessionFeedbacks">
+              <PropertyRef Name="GymMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMembersInPartnerGroup_GymMember">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="GymMembersInPartnerGroup" Type="Self.GymMembersInPartnerGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GymMembersInPartnerGroup">
+              <PropertyRef Name="GymMembers_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMembersInPartnerGroup_PartnerGroup">
+          <End Role="PartnerGroups" Type="Self.PartnerGroups" Multiplicity="1" />
+          <End Role="GymMembersInPartnerGroup" Type="Self.GymMembersInPartnerGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartnerGroups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GymMembersInPartnerGroup">
+              <PropertyRef Name="JoinedGroups_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberTrainerPersonalAppointmentSession">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="TrainerPersonalAppointmentSessions" Type="Self.TrainerPersonalAppointmentSessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TrainerPersonalAppointmentSessions">
+              <PropertyRef Name="TrainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PartnerGroupGroupActivity">
+          <End Role="PartnerGroups" Type="Self.PartnerGroups" Multiplicity="1" />
+          <End Role="GroupActivities" Type="Self.GroupActivities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartnerGroups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupActivities">
+              <PropertyRef Name="PartnerGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PartnerGroupGroupJoinRequest">
+          <End Role="PartnerGroups" Type="Self.PartnerGroups" Multiplicity="1" />
+          <End Role="GroupJoinRequests" Type="Self.GroupJoinRequests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartnerGroups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupJoinRequests">
+              <PropertyRef Name="PartnerGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PersonalAppointmentRequestTrainerPersonalAppointmentSession">
+          <End Role="TrainerPersonalAppointmentSessions" Type="Self.TrainerPersonalAppointmentSessions" Multiplicity="1" />
+          <End Role="PersonalAppointmentRequests1" Type="Self.PersonalAppointmentRequests1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TrainerPersonalAppointmentSessions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonalAppointmentRequests1">
+              <PropertyRef Name="TrainerPersonalAppointmentSession_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SessionSessionFeedback">
+          <End Role="Sessions" Type="Self.Sessions" Multiplicity="1" />
+          <End Role="SessionFeedbacks" Type="Self.SessionFeedbacks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sessions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SessionFeedbacks">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FitnessGuruModelStoreContainer">
+          <EntitySet Name="GroupActivities" EntityType="Self.GroupActivities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupJoinRequests" EntityType="Self.GroupJoinRequests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GymMemberGroupActivity" EntityType="Self.GymMemberGroupActivity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GymMembers" EntityType="Self.GymMembers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GymMemberSession1" EntityType="Self.GymMemberSession1" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GymMembersInPartnerGroup" EntityType="Self.GymMembersInPartnerGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PartnerGroups" EntityType="Self.PartnerGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PersonalAppointmentRequests1" EntityType="Self.PersonalAppointmentRequests1" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SessionFeedbacks" EntityType="Self.SessionFeedbacks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sessions" EntityType="Self.Sessions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrainerPersonalAppointmentSessions" EntityType="Self.TrainerPersonalAppointmentSessions" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_GymMemberGroupActivity_GroupActivity" Association="Self.FK_GymMemberGroupActivity_GroupActivity">
+            <End Role="GroupActivities" EntitySet="GroupActivities" />
+            <End Role="GymMemberGroupActivity" EntitySet="GymMemberGroupActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberGroupActivity_GymMember" Association="Self.FK_GymMemberGroupActivity_GymMember">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="GymMemberGroupActivity" EntitySet="GymMemberGroupActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberGroupJoinRequest" Association="Self.FK_GymMemberGroupJoinRequest">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="GroupJoinRequests" EntitySet="GroupJoinRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberPartnerGroup" Association="Self.FK_GymMemberPartnerGroup">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="PartnerGroups" EntitySet="PartnerGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberPersonalAppointmentRequest" Association="Self.FK_GymMemberPersonalAppointmentRequest">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="PersonalAppointmentRequests1" EntitySet="PersonalAppointmentRequests1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberSession" Association="Self.FK_GymMemberSession">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="Sessions" EntitySet="Sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberSession1_GymMember" Association="Self.FK_GymMemberSession1_GymMember">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="GymMemberSession1" EntitySet="GymMemberSession1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberSession1_Session" Association="Self.FK_GymMemberSession1_Session">
+            <End Role="Sessions" EntitySet="Sessions" />
+            <End Role="GymMemberSession1" EntitySet="GymMemberSession1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberSessionFeedback" Association="Self.FK_GymMemberSessionFeedback">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="SessionFeedbacks" EntitySet="SessionFeedbacks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMembersInPartnerGroup_GymMember" Association="Self.FK_GymMembersInPartnerGroup_GymMember">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="GymMembersInPartnerGroup" EntitySet="GymMembersInPartnerGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMembersInPartnerGroup_PartnerGroup" Association="Self.FK_GymMembersInPartnerGroup_PartnerGroup">
+            <End Role="PartnerGroups" EntitySet="PartnerGroups" />
+            <End Role="GymMembersInPartnerGroup" EntitySet="GymMembersInPartnerGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberTrainerPersonalAppointmentSession" Association="Self.FK_GymMemberTrainerPersonalAppointmentSession">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="TrainerPersonalAppointmentSessions" EntitySet="TrainerPersonalAppointmentSessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PartnerGroupGroupActivity" Association="Self.FK_PartnerGroupGroupActivity">
+            <End Role="PartnerGroups" EntitySet="PartnerGroups" />
+            <End Role="GroupActivities" EntitySet="GroupActivities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PartnerGroupGroupJoinRequest" Association="Self.FK_PartnerGroupGroupJoinRequest">
+            <End Role="PartnerGroups" EntitySet="PartnerGroups" />
+            <End Role="GroupJoinRequests" EntitySet="GroupJoinRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PersonalAppointmentRequestTrainerPersonalAppointmentSession" Association="Self.FK_PersonalAppointmentRequestTrainerPersonalAppointmentSession">
+            <End Role="TrainerPersonalAppointmentSessions" EntitySet="TrainerPersonalAppointmentSessions" />
+            <End Role="PersonalAppointmentRequests1" EntitySet="PersonalAppointmentRequests1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SessionSessionFeedback" Association="Self.FK_SessionSessionFeedback">
+            <End Role="Sessions" EntitySet="Sessions" />
+            <End Role="SessionFeedbacks" EntitySet="SessionFeedbacks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="FitnessGuruModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="FitnessGuruModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="GymMembers" EntityType="FitnessGuruModel.GymMember" />
+          <EntitySet Name="Sessions" EntityType="FitnessGuruModel.Session" />
+          <AssociationSet Name="GymMemberSession" Association="FitnessGuruModel.GymMemberSession">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
+          <AssociationSet Name="GymMemberSession1" Association="FitnessGuruModel.GymMemberSession1">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="Session" EntitySet="Sessions" />
+          </AssociationSet>
+          <EntitySet Name="SessionFeedbacks" EntityType="FitnessGuruModel.SessionFeedback" />
+          <AssociationSet Name="GymMemberSessionFeedback" Association="FitnessGuruModel.GymMemberSessionFeedback">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="SessionFeedback" EntitySet="SessionFeedbacks" />
+          </AssociationSet>
+          <AssociationSet Name="SessionSessionFeedback" Association="FitnessGuruModel.SessionSessionFeedback">
+            <End Role="Session" EntitySet="Sessions" />
+            <End Role="SessionFeedback" EntitySet="SessionFeedbacks" />
+          </AssociationSet>
+          <EntitySet Name="TrainerPersonalAppointmentSessions" EntityType="FitnessGuruModel.TrainerPersonalAppointmentSession" />
+          <AssociationSet Name="GymMemberTrainerPersonalAppointmentSession" Association="FitnessGuruModel.GymMemberTrainerPersonalAppointmentSession">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="TrainerPersonalAppointmentSession" EntitySet="TrainerPersonalAppointmentSessions" />
+          </AssociationSet>
+          <EntitySet Name="PersonalAppointmentRequests1" EntityType="FitnessGuruModel.PersonalAppointmentRequest" />
+          <AssociationSet Name="GymMemberPersonalAppointmentRequest" Association="FitnessGuruModel.GymMemberPersonalAppointmentRequest">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="PersonalAppointmentRequest" EntitySet="PersonalAppointmentRequests1" />
+          </AssociationSet>
+          <AssociationSet Name="PersonalAppointmentRequestTrainerPersonalAppointmentSession" Association="FitnessGuruModel.PersonalAppointmentRequestTrainerPersonalAppointmentSession">
+            <End Role="PersonalAppointmentRequest" EntitySet="PersonalAppointmentRequests1" />
+            <End Role="TrainerPersonalAppointmentSession" EntitySet="TrainerPersonalAppointmentSessions" />
+          </AssociationSet>
+          <EntitySet Name="PartnerGroups" EntityType="FitnessGuruModel.PartnerGroup" />
+          <AssociationSet Name="GymMemberPartnerGroup" Association="FitnessGuruModel.GymMemberPartnerGroup">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="PartnerGroup" EntitySet="PartnerGroups" />
+          </AssociationSet>
+          <EntitySet Name="GroupJoinRequests" EntityType="FitnessGuruModel.GroupJoinRequest" />
+          <AssociationSet Name="PartnerGroupGroupJoinRequest" Association="FitnessGuruModel.PartnerGroupGroupJoinRequest">
+            <End Role="PartnerGroup" EntitySet="PartnerGroups" />
+            <End Role="GroupJoinRequest" EntitySet="GroupJoinRequests" />
+          </AssociationSet>
+          <AssociationSet Name="GymMemberGroupJoinRequest" Association="FitnessGuruModel.GymMemberGroupJoinRequest">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="GroupJoinRequest" EntitySet="GroupJoinRequests" />
+          </AssociationSet>
+          <AssociationSet Name="GymMembersInPartnerGroup" Association="FitnessGuruModel.GymMembersInPartnerGroup">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="PartnerGroup" EntitySet="PartnerGroups" />
+          </AssociationSet>
+          <EntitySet Name="GroupActivities" EntityType="FitnessGuruModel.GroupActivity" />
+          <AssociationSet Name="PartnerGroupGroupActivity" Association="FitnessGuruModel.PartnerGroupGroupActivity">
+            <End Role="PartnerGroup" EntitySet="PartnerGroups" />
+            <End Role="GroupActivity" EntitySet="GroupActivities" />
+          </AssociationSet>
+          <AssociationSet Name="GymMemberGroupActivity" Association="FitnessGuruModel.GymMemberGroupActivity">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="GroupActivity" EntitySet="GroupActivities" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="GymMember">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AddressLine1" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="AddressLine2" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ProfilePicPath" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Desc" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Sessions" Relationship="FitnessGuruModel.GymMemberSession" FromRole="GymMember" ToRole="Session" />
+          <NavigationProperty Name="JoinedSessions" Relationship="FitnessGuruModel.GymMemberSession1" FromRole="GymMember" ToRole="Session" />
+          <NavigationProperty Name="SessionFeedbacks" Relationship="FitnessGuruModel.GymMemberSessionFeedback" FromRole="GymMember" ToRole="SessionFeedback" />
+          <NavigationProperty Name="TrainerPersonalAppointmentSessions" Relationship="FitnessGuruModel.GymMemberTrainerPersonalAppointmentSession" FromRole="GymMember" ToRole="TrainerPersonalAppointmentSession" />
+          <NavigationProperty Name="PersonalAppointmentRequests" Relationship="FitnessGuruModel.GymMemberPersonalAppointmentRequest" FromRole="GymMember" ToRole="PersonalAppointmentRequest" />
+          <NavigationProperty Name="PartnerGroups" Relationship="FitnessGuruModel.GymMemberPartnerGroup" FromRole="GymMember" ToRole="PartnerGroup" />
+          <NavigationProperty Name="GroupJoinRequests" Relationship="FitnessGuruModel.GymMemberGroupJoinRequest" FromRole="GymMember" ToRole="GroupJoinRequest" />
+          <NavigationProperty Name="JoinedGroups" Relationship="FitnessGuruModel.GymMembersInPartnerGroup" FromRole="GymMember" ToRole="PartnerGroup" />
+          <NavigationProperty Name="GroupActivities" Relationship="FitnessGuruModel.GymMemberGroupActivity" FromRole="GymMember" ToRole="GroupActivity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Gender" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SessionName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="SessionAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="isCancelled" Type="Boolean" Nullable="false" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberSession" FromRole="Session" ToRole="GymMember" />
+          <Property Name="TrainerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GymMembers" Relationship="FitnessGuruModel.GymMemberSession1" FromRole="Session" ToRole="GymMember" />
+          <NavigationProperty Name="SessionFeedbacks" Relationship="FitnessGuruModel.SessionSessionFeedback" FromRole="Session" ToRole="SessionFeedback" />
+        </EntityType>
+        <Association Name="GymMemberSession">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="1" />
+          <End Type="FitnessGuruModel.Session" Role="Session" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Session">
+              <PropertyRef Name="TrainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GymMemberSession1">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="*" />
+          <End Type="FitnessGuruModel.Session" Role="Session" Multiplicity="*" />
+        </Association>
+        <EntityType Name="SessionFeedback">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Rating" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberSessionFeedback" FromRole="SessionFeedback" ToRole="GymMember" />
+          <Property Name="GymMemberId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Session" Relationship="FitnessGuruModel.SessionSessionFeedback" FromRole="SessionFeedback" ToRole="Session" />
+          <Property Name="SessionId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="GymMemberSessionFeedback">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="1" />
+          <End Type="FitnessGuruModel.SessionFeedback" Role="SessionFeedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SessionFeedback">
+              <PropertyRef Name="GymMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SessionSessionFeedback">
+          <End Type="FitnessGuruModel.Session" Role="Session" Multiplicity="1" />
+          <End Type="FitnessGuruModel.SessionFeedback" Role="SessionFeedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Session">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SessionFeedback">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TrainerPersonalAppointmentSession">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AvailableAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberTrainerPersonalAppointmentSession" FromRole="TrainerPersonalAppointmentSession" ToRole="GymMember" />
+          <Property Name="TrainerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PersonalAppointmentRequest" Relationship="FitnessGuruModel.PersonalAppointmentRequestTrainerPersonalAppointmentSession" FromRole="TrainerPersonalAppointmentSession" ToRole="PersonalAppointmentRequest" />
+        </EntityType>
+        <Association Name="GymMemberTrainerPersonalAppointmentSession">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="1" />
+          <End Type="FitnessGuruModel.TrainerPersonalAppointmentSession" Role="TrainerPersonalAppointmentSession" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TrainerPersonalAppointmentSession">
+              <PropertyRef Name="TrainerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PersonalAppointmentRequest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+          <Property Name="Feedback" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberPersonalAppointmentRequest" FromRole="PersonalAppointmentRequest" ToRole="GymMember" />
+          <Property Name="GymMemberId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TrainerPersonalAppointmentSession" Relationship="FitnessGuruModel.PersonalAppointmentRequestTrainerPersonalAppointmentSession" FromRole="PersonalAppointmentRequest" ToRole="TrainerPersonalAppointmentSession" />
+        </EntityType>
+        <Association Name="GymMemberPersonalAppointmentRequest">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="1" />
+          <End Type="FitnessGuruModel.PersonalAppointmentRequest" Role="PersonalAppointmentRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PersonalAppointmentRequest">
+              <PropertyRef Name="GymMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PersonalAppointmentRequestTrainerPersonalAppointmentSession">
+          <End Type="FitnessGuruModel.PersonalAppointmentRequest" Role="PersonalAppointmentRequest" Multiplicity="1" />
+          <End Type="FitnessGuruModel.TrainerPersonalAppointmentSession" Role="TrainerPersonalAppointmentSession" Multiplicity="1" />
+        </Association>
+        <EntityType Name="PartnerGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberPartnerGroup" FromRole="PartnerGroup" ToRole="GymMember" />
+          <Property Name="Owner" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GroupJoinRequests" Relationship="FitnessGuruModel.PartnerGroupGroupJoinRequest" FromRole="PartnerGroup" ToRole="GroupJoinRequest" />
+          <NavigationProperty Name="GymMembers" Relationship="FitnessGuruModel.GymMembersInPartnerGroup" FromRole="PartnerGroup" ToRole="GymMember" />
+          <NavigationProperty Name="GroupActivities" Relationship="FitnessGuruModel.PartnerGroupGroupActivity" FromRole="PartnerGroup" ToRole="GroupActivity" />
+        </EntityType>
+        <Association Name="GymMemberPartnerGroup">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="1" />
+          <End Type="FitnessGuruModel.PartnerGroup" Role="PartnerGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PartnerGroup">
+              <PropertyRef Name="Owner" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GroupJoinRequest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="PartnerGroup" Relationship="FitnessGuruModel.PartnerGroupGroupJoinRequest" FromRole="GroupJoinRequest" ToRole="PartnerGroup" />
+          <Property Name="PartnerGroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberGroupJoinRequest" FromRole="GroupJoinRequest" ToRole="GymMember" />
+          <Property Name="GymMemberId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="PartnerGroupGroupJoinRequest">
+          <End Type="FitnessGuruModel.PartnerGroup" Role="PartnerGroup" Multiplicity="1" />
+          <End Type="FitnessGuruModel.GroupJoinRequest" Role="GroupJoinRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartnerGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupJoinRequest">
+              <PropertyRef Name="PartnerGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GymMemberGroupJoinRequest">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="1" />
+          <End Type="FitnessGuruModel.GroupJoinRequest" Role="GroupJoinRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupJoinRequest">
+              <PropertyRef Name="GymMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GymMembersInPartnerGroup">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="*" />
+          <End Type="FitnessGuruModel.PartnerGroup" Role="PartnerGroup" Multiplicity="*" />
+        </Association>
+        <EntityType Name="GroupActivity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ScheduledAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="PartnerGroup" Relationship="FitnessGuruModel.PartnerGroupGroupActivity" FromRole="GroupActivity" ToRole="PartnerGroup" />
+          <Property Name="PartnerGroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GymMembers" Relationship="FitnessGuruModel.GymMemberGroupActivity" FromRole="GroupActivity" ToRole="GymMember" />
+        </EntityType>
+        <Association Name="PartnerGroupGroupActivity">
+          <End Type="FitnessGuruModel.PartnerGroup" Role="PartnerGroup" Multiplicity="1" />
+          <End Type="FitnessGuruModel.GroupActivity" Role="GroupActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PartnerGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupActivity">
+              <PropertyRef Name="PartnerGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GymMemberGroupActivity">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="*" />
+          <End Type="FitnessGuruModel.GroupActivity" Role="GroupActivity" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FitnessGuruModelStoreContainer" CdmEntityContainer="FitnessGuruModelContainer">
+    <EntitySetMapping Name="GymMembers">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.GymMember)">
+        <MappingFragment StoreEntitySet="GymMembers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+          <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+          <ScalarProperty Name="ProfilePicPath" ColumnName="ProfilePicPath" />
+          <ScalarProperty Name="Desc" ColumnName="Desc" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Sessions">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.Session)">
+        <MappingFragment StoreEntitySet="Sessions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SessionName" ColumnName="SessionName" />
+          <ScalarProperty Name="SessionAt" ColumnName="SessionAt" />
+          <ScalarProperty Name="isCancelled" ColumnName="isCancelled" />
+          <ScalarProperty Name="Desc" ColumnName="Desc" />
+          <ScalarProperty Name="TrainerId" ColumnName="TrainerId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SessionFeedbacks">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.SessionFeedback)">
+        <MappingFragment StoreEntitySet="SessionFeedbacks">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Desc" ColumnName="Desc" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="GymMemberId" ColumnName="GymMemberId" />
+          <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TrainerPersonalAppointmentSessions">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.TrainerPersonalAppointmentSession)">
+        <MappingFragment StoreEntitySet="TrainerPersonalAppointmentSessions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="AvailableAt" ColumnName="AvailableAt" />
+          <ScalarProperty Name="TrainerId" ColumnName="TrainerId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PersonalAppointmentRequests1">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.PersonalAppointmentRequest)">
+        <MappingFragment StoreEntitySet="PersonalAppointmentRequests1">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Desc" ColumnName="Desc" />
+          <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+          <ScalarProperty Name="Feedback" ColumnName="Feedback" />
+          <ScalarProperty Name="GymMemberId" ColumnName="GymMemberId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PartnerGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.PartnerGroup)">
+        <MappingFragment StoreEntitySet="PartnerGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Owner" ColumnName="Owner" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupJoinRequests">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.GroupJoinRequest)">
+        <MappingFragment StoreEntitySet="GroupJoinRequests">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Desc" ColumnName="Desc" />
+          <ScalarProperty Name="PartnerGroupId" ColumnName="PartnerGroupId" />
+          <ScalarProperty Name="GymMemberId" ColumnName="GymMemberId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupActivities">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.GroupActivity)">
+        <MappingFragment StoreEntitySet="GroupActivities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Desc" ColumnName="Desc" />
+          <ScalarProperty Name="ScheduledAt" ColumnName="ScheduledAt" />
+          <ScalarProperty Name="PartnerGroupId" ColumnName="PartnerGroupId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="GymMemberSession1" TypeName="FitnessGuruModel.GymMemberSession1" StoreEntitySet="GymMemberSession1">
+      <EndProperty Name="GymMember">
+        <ScalarProperty Name="Id" ColumnName="GymMembers_Id" />
+      </EndProperty>
+      <EndProperty Name="Session">
+        <ScalarProperty Name="Id" ColumnName="JoinedSessions_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PersonalAppointmentRequestTrainerPersonalAppointmentSession" TypeName="FitnessGuruModel.PersonalAppointmentRequestTrainerPersonalAppointmentSession" StoreEntitySet="PersonalAppointmentRequests1">
+      <EndProperty Name="TrainerPersonalAppointmentSession">
+        <ScalarProperty Name="Id" ColumnName="TrainerPersonalAppointmentSession_Id" />
+      </EndProperty>
+      <EndProperty Name="PersonalAppointmentRequest">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="GymMembersInPartnerGroup" TypeName="FitnessGuruModel.GymMembersInPartnerGroup" StoreEntitySet="GymMembersInPartnerGroup">
+      <EndProperty Name="GymMember">
+        <ScalarProperty Name="Id" ColumnName="GymMembers_Id" />
+      </EndProperty>
+      <EndProperty Name="PartnerGroup">
+        <ScalarProperty Name="Id" ColumnName="JoinedGroups_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="GymMemberGroupActivity" TypeName="FitnessGuruModel.GymMemberGroupActivity" StoreEntitySet="GymMemberGroupActivity">
+      <EndProperty Name="GymMember">
+        <ScalarProperty Name="Id" ColumnName="GymMembers_Id" />
+      </EndProperty>
+      <EndProperty Name="GroupActivity">
+        <ScalarProperty Name="Id" ColumnName="GroupActivities_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

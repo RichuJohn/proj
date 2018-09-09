@@ -1,0 +1,49 @@
+﻿@model IEnumerable<FitnessGuru_Main.Models.Session>
+
+@{
+    ViewBag.Title = "ShowHistory";
+}
+
+<h2>ShowHistory</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SessionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SessionAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Desc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GymMember.FirstName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SessionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SessionAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Desc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GymMember.FirstName)
+        </td>
+        <td>
+            @Html.ActionLink("Provide Feedback", "Feedback", "Sessions", new { id=item.Id }, null)
+        </td>
+    </tr>
+}
+
+</table>

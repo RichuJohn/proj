@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<div class="row">
+
+    <div class="jumbotron">
+        <h2>Welcome to Fitness Guru</h2>
+        <p>
+            Come join us at FitnessGuru and take advantage of the various services that we provide you and for free.
+        </p>
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <h2>Already A Member</h2>
+        <p>
+            
+            @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" , @class="btn btn-primary"})
+        </p>
+      
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <h2>New to Fitness Guru</h2>
+        @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class="btn btn-primary" })
+    </div>
+</div>

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<FitnessGuru_Main.Models.Session>
+
+@{
+    ViewBag.Title = "ListSessionsCreated";
+}
+
+<h2>These are the sessions created by you</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SessionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SessionAt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isCancelled)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Desc)
+        </th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SessionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SessionAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.isCancelled)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Desc)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", "Sessions", new { id=item.Id }, null) |
+            @Html.ActionLink("Details", "Details", "Sessions", new { id=item.Id }, null) |
+            @Html.ActionLink("Delete", "Delete", "Sessions", new { id=item.Id }, null)
+        </td>
+    </tr>
+}
+
+</table>
+
+<p>
+    @Html.ActionLink("Create A New Session", "Create", "Sessions")
+</p>

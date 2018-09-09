@@ -1,0 +1,58 @@
+﻿@model FitnessGuru_Main.Models.Session
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Session</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SessionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SessionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SessionAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SessionAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isCancelled)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isCancelled)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Desc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Desc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GymMember.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GymMember.FirstName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Go Back", "ListSessionsCreated", "GymMembers")
+</p>
