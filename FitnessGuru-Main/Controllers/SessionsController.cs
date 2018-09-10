@@ -132,10 +132,86 @@ namespace FitnessGuru_Main.Controllers
             return RedirectToAction("ListSessionsCreated", "GymMembers");
         }
 
-        public ActionResult Feedback()
+        public ActionResult Feedback(int? id)
         {
-            return View();
+            ViewBag.FeedbackStatus = "Please tell us how you felt";
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Session session = db.Sessions.Find(id);
+            if (session == null)
+            {
+                return HttpNotFound();
+            }
+
+            var gymMemberId = User.Identity.GetUserId();
+            var user = db.GymMembers.Where(c => c.UserId == gymMemberId).FirstOrDefault();
+
+            // todo check if the user is indeed a user joined in that session
+
+            SessionFeedback sessionFeedback = session.SessionFeedbacks.Where(c => c.GymMemberId == user.Id).FirstOrDefault();
+
+            SessionFeedbackViewModel sessionFeedbackViewModel = new SessionFeedbackViewModel()
+            {
+                session = session,
+                feedback = sessionFeedback,
+            };
+
+            return View(sessionFeedbackViewModel);
+
         }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Feedback(SessionFeedbackViewModel model)
+        {
+
+            ViewBag.FeedbackStatus = "Thankyou.. Your feedback has been duely noted";
+
+            var gymMemberId = User.Identity.GetUserId();
+            var user = db.GymMembers.Where(c => c.UserId == gymMemberId).FirstOrDefault();
+
+            Session session = db.Sessions.Find(model.session.Id);
+            SessionFeedback sessionFeedback = new SessionFeedback()
+            {
+                GymMemberId = user.Id,
+                SessionId = model.session.Id,
+                Desc = model.feedback.Desc,
+                Rating = model.feedback.Rating,
+            };
+
+            // see if the user already provided a feedback
+            var userFeedbackForSession = session.SessionFeedbacks.Where(c => c.GymMemberId == user.Id).FirstOrDefault();
+
+            if (userFeedbackForSession != null)
+            {
+                //session.SessionFeedbacks.Remove(userFeedbackForSession);
+                //db.Entry(session).State = EntityState.Modified;
+                //db.SaveChanges();
+                //session.SessionFeedbacks.Add(sessionFeedback);
+               
+                userFeedbackForSession.Desc = sessionFeedback.Desc;
+                userFeedbackForSession.Rating = sessionFeedback.Rating;
+            } else {
+                session.SessionFeedbacks.Add(sessionFeedback);
+            }
+
+            db.Entry(session).State = EntityState.Modified;
+            db.SaveChanges();
+
+            SessionFeedbackViewModel sessionFeedbackViewModel = new SessionFeedbackViewModel()
+            {
+                session = session,
+                feedback = session.SessionFeedbacks.Where(c => c.GymMemberId == user.Id).FirstOrDefault(),
+            };
+            return View(sessionFeedbackViewModel);
+        }
+
+
 
         protected override void Dispose(bool disposing)
         {

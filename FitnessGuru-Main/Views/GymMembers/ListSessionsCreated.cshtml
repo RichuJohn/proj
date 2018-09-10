@@ -2,53 +2,69 @@
 
 @{
     ViewBag.Title = "ListSessionsCreated";
+    var isSessionEmpty = Model.Count() == 0;
 }
 
-<h2>These are the sessions created by you</h2>
+@if (!isSessionEmpty)
+{
+    <div class="row">
 
+        <h2 class="col-sm-6">These are the sessions created by you</h2>
+        <h2>@Html.ActionLink("Create New", "Create", "Sessions", null, new { @class = "btn btn-primary" })</h2>
+    </div>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.SessionName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SessionAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.isCancelled)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Desc)
-        </th>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isCancelled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Desc)
+            </th>
 
-        <th></th>
-    </tr>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SessionName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SessionAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.isCancelled)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Desc)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", "Sessions", new { id=item.Id }, null) |
-            @Html.ActionLink("Details", "Details", "Sessions", new { id=item.Id }, null) |
-            @Html.ActionLink("Delete", "Delete", "Sessions", new { id=item.Id }, null)
-        </td>
-    </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SessionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SessionAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.isCancelled)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Desc)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "Sessions", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" }) |
+                    @Html.ActionLink("Details", "Details", "Sessions", new { id = item.Id }, new { @class = "btn btn-success btn-sm" }) |
+                    @Html.ActionLink("Delete", "Delete", "Sessions", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
+                </td>
+            </tr>
+        }
+
+    </table>
 }
+else
+{
+    <div class="row">
 
-</table>
+        <h2 class="col-sm-6">You haven't yet created any sessions</h2>
+        <h2>@Html.ActionLink("Create New", "Create", "Sessions", null, new { @class = "btn btn-primary" })</h2>
+    </div>
+}
 
 <p>
-    @Html.ActionLink("Create A New Session", "Create", "Sessions")
+    @Html.ActionLink("Back to Home", "Index")
 </p>

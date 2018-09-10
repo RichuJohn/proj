@@ -28,8 +28,13 @@
         <div class="form-group">
             @Html.LabelFor(model => model.SessionAt, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.SessionAt, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SessionAt, "", new { @class = "text-danger" })
+                <div class="input-group datetime">
+                    @Html.EditorFor(model => model.SessionAt, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                    @Html.ValidationMessageFor(model => model.SessionAt, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
 

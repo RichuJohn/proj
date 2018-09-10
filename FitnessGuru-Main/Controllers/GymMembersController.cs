@@ -20,19 +20,30 @@ namespace FitnessGuru_Main.Controllers
         // GET: GymMembers
         public ActionResult Index()
         {
-            var sessions = db.Sessions.Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0)).Include(s => s.GymMember);
-            HashSet<Session> foo = new HashSet<Session>(from x in sessions.ToList() select x);
-
             var userId = User.Identity.GetUserId();
-            var user = db.GymMembers.Where(c => c.UserId == userId).Include(s => s.JoinedSessions).FirstOrDefault();
+            GymMember user = db.GymMembers.Where(c => c.UserId == userId).Include(s => s.JoinedSessions).FirstOrDefault();
 
+            ViewBag.Name = user.FirstName;
 
-            var joinedSession = user.JoinedSessions.Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0)).ToList();
+            var sessions = db.Sessions
+                                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                                .Include(s => s.GymMember)
+                                .ToList();
+
+            var sessionsWithoutUser = sessions
+                .Where(c => !c.GymMembers.Contains(user))
+                .OrderBy(c=>c.SessionAt)
+                .ToList();
+
+            var joinedSessions = user.JoinedSessions
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .OrderBy(c => c.SessionAt)
+                .ToList();
 
             var sb = new GymMemberIndexViewModel()
             {
-                CompleteSessions = foo,
-                JoinedSessions = joinedSession
+                CompleteSessions = sessionsWithoutUser,
+                JoinedSessions = joinedSessions
             };
           
             return View(sb);

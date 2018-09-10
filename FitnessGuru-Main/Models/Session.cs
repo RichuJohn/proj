@@ -11,7 +11,8 @@ namespace FitnessGuru_Main.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Session
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,10 +23,18 @@ namespace FitnessGuru_Main.Models
         }
     
         public int Id { get; set; }
+
+        [Display(Name ="Session Name")]
         public string SessionName { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public System.DateTime SessionAt { get; set; }
         public bool isCancelled { get; set; }
+
+        [Display(Name = "Details")]
         public string Desc { get; set; }
+
         public int TrainerId { get; set; }
     
         public virtual GymMember GymMember { get; set; }

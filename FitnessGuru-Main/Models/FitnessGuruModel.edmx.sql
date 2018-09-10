@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 09/05/2018 21:41:47
+-- Date Created: 09/10/2018 14:47:24
 -- Generated from EDMX file: C:\Users\Richu\Source\Repos\FitnessGuru-Main\FitnessGuru-Main\Models\FitnessGuruModel.edmx
 -- --------------------------------------------------
 
@@ -137,8 +137,8 @@ GO
 -- Creating table 'SessionFeedbacks'
 CREATE TABLE [dbo].[SessionFeedbacks] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [Desc] nvarchar(max)  NOT NULL,
-    [Rating] int  NOT NULL,
+    [Desc] nvarchar(max)  NULL,
+    [Rating] int  NULL,
     [GymMemberId] int  NOT NULL,
     [SessionId] int  NOT NULL
 );
@@ -159,6 +159,7 @@ CREATE TABLE [dbo].[PersonalAppointmentRequests1] (
     [IsApproved] bit  NOT NULL,
     [Feedback] nvarchar(max)  NULL,
     [GymMemberId] int  NOT NULL,
+    [Rating] int  NULL,
     [TrainerPersonalAppointmentSession_Id] int  NOT NULL
 );
 GO

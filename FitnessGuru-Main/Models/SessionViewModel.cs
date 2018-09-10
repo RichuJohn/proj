@@ -15,4 +15,11 @@ namespace FitnessGuru_Main.Models
         public DateTime SessionAt { get; set; }
         public string Desc { get; set; }
     }
+
+    public class SessionFeedbackViewModel
+    {
+        public Session session { get; set; }
+        public SessionFeedback feedback { get; set; }
+    }
+
 }

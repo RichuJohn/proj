@@ -19,6 +19,7 @@ namespace FitnessGuru_Main.Models
         public bool IsApproved { get; set; }
         public string Feedback { get; set; }
         public int GymMemberId { get; set; }
+        public Nullable<int> Rating { get; set; }
     
         public virtual GymMember GymMember { get; set; }
         public virtual TrainerPersonalAppointmentSession TrainerPersonalAppointmentSession { get; set; }

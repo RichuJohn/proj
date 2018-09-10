@@ -11,12 +11,15 @@ namespace FitnessGuru_Main.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class SessionFeedback
     {
         public int Id { get; set; }
+
+        [Display(Name = "FeedBack")]
         public string Desc { get; set; }
-        public int Rating { get; set; }
+        public Nullable<int> Rating { get; set; }
         public int GymMemberId { get; set; }
         public int SessionId { get; set; }
     

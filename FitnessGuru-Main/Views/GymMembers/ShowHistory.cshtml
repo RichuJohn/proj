@@ -6,9 +6,6 @@
 
 <h2>ShowHistory</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -41,9 +38,13 @@
             @Html.DisplayFor(modelItem => item.GymMember.FirstName)
         </td>
         <td>
-            @Html.ActionLink("Provide Feedback", "Feedback", "Sessions", new { id=item.Id }, null)
+            @Html.ActionLink("Provide Feedback", "Feedback", "Sessions", new { id=item.Id }, new { @class = "btn btn-primary btn-sm"})
         </td>
     </tr>
 }
 
 </table>
+
+<p>
+    @Html.ActionLink("Back to Home", "Index")
+</p>

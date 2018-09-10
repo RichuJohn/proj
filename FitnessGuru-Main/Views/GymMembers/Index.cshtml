@@ -5,142 +5,178 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Welcome @ViewBag.Name</h2>
+@{
+    var isUserJoinedSessionsEmpty = Model.JoinedSessions.Count() == 0;
+    var isUpcomingSessionsEmpty = Model.CompleteSessions.Count() == 0;
+}
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-6">
-            <h3>You have Joined these Sessions</h3>
+        <div class="col-md-6 col-xs-6">
+            @if (isUserJoinedSessionsEmpty)
+            {
+                <h3>Seems like you haven't enrolled for any upcoming sessions</h3>
+            }
+            else
+            {
+                <h3>Are you prepared for your upcoming sessions</h3>
+            }
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-xs-6">
             @using (Html.BeginForm("ShowHistory", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="form-group">
-                    @*@Html.Hidden("id", User.Identity.GetUserId())*@
                     <div class="form-group">
                         <div>
-                            <input type="submit" value="View History" class="btn btn-default" />
+                            <input type="submit" value="View History" class="btn btn-default control-label h3" />
                         </div>
                     </div>
                 </div>
             }
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            @if (!isUserJoinedSessionsEmpty)
+            {
+                <table class="table table-responsive">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.JoinedSessions.FirstOrDefault().SessionName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.JoinedSessions.FirstOrDefault().SessionAt)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.JoinedSessions.FirstOrDefault().Desc)
+                        </th>
+                        <th>
+                            Trainer
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.JoinedSessions)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SessionName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SessionAt)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Desc)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GymMember.FirstName)
+                            </td>
+                            <td>
+
+                                @using (Html.BeginForm("OptOutFromSession", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group">
+                                        @Html.Hidden("id", item.Id)
+                                        <div class="form-group">
+                                            <div>
+                                                <input type="submit" value="Opt Out" class="btn btn-default" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-md-6 col-xs-6">
+            @if (isUpcomingSessionsEmpty)
+            {
+                <h3>Seems like there are no sessions planned</h3>
+            }
+            else
+            {
+                <h3>Are you ready for yet another challenge!!! Join any upcoming sessions</h3>
+            }
+        </div>
+        
+
+        <div class="row">
+            <div class="col-sm-12">
+                @if (!isUpcomingSessionsEmpty)
+                {
+                    <table class="table table-responsive">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().SessionName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().SessionAt)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().Desc)
+                            </th>
+                            <th>
+                                Trainer
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model.CompleteSessions)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SessionName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SessionAt)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Desc)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.GymMember.FirstName)
+                                </td>
+                                <td>
+                                    @*@Html.ActionLink("Join Session", "Join", new { id = item.Id })*@
+
+                                    @using (Html.BeginForm("JoinSession", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <div class="form-group">
+                                            @Html.Hidden("id", item.Id)
+                                            <div class="form-group">
+                                                <div>
+                                                    <input type="submit" value="Join Session" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                }
+                </div>
+        </div>
+    </div>
+
+    <p>
+        @Html.ActionLink("View Sessions Managed By You", "ListSessionsCreated", "GymMembers", new { area = "" }, new { returnUrl = "Sessions/Index", @class = "btn btn-primary" })
+    </p>
+
 </div>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.JoinedSessions.FirstOrDefault().SessionName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JoinedSessions.FirstOrDefault().SessionAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JoinedSessions.FirstOrDefault().Desc)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JoinedSessions.FirstOrDefault().GymMember.FirstName)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model.JoinedSessions)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SessionName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SessionAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Desc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GymMember.FirstName)
-            </td>
-            <td>
-
-                @using (Html.BeginForm("OptOutFromSession", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="form-group">
-                        @Html.Hidden("id", item.Id)
-                        <div class="form-group">
-                            <div>
-                                <input type="submit" value="Opt Out" class="btn btn-default" />
-                            </div>
-                        </div>
-                    </div>
-                }
-
-            </td>
-        </tr>
-    }
-
-</table>
-
-
-<h3>Other Upcoming Sessions</h3>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().SessionName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().SessionAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().Desc)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().GymMember.FirstName)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model.CompleteSessions)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SessionName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SessionAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Desc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GymMember.FirstName)
-            </td>
-            <td>
-                @*@Html.ActionLink("Join Session", "Join", new { id = item.Id })*@
-
-                @using (Html.BeginForm("JoinSession", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="form-group">
-                        @Html.Hidden("id", item.Id)
-                        <div class="form-group">
-                            <div>
-                                <input type="submit" value="Join Session" class="btn btn-default" />
-                            </div>
-                        </div>
-                    </div>
-                }
-            </td>
-        </tr>
-    }
-
-</table>
-
-
-<p>
-    @*@Html.ActionLink("Create New", "Create", "Sessions")*@
-    @*@Html.ActionLink("Create New", "Create")*@
-    @Html.ActionLink("View Sessions Managed By You", "ListSessionsCreated", "GymMembers", new { area = "" }, new { returnUrl = "Sessions/Index", @class = "btn btn-primary btn-lg" })
-</p>
 

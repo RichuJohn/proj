@@ -79,6 +79,7 @@
           <Property Name="IsApproved" Type="bit" Nullable="false" />
           <Property Name="Feedback" Type="nvarchar(max)" />
           <Property Name="GymMemberId" Type="int" Nullable="false" />
+          <Property Name="Rating" Type="int" />
           <Property Name="TrainerPersonalAppointmentSession_Id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SessionFeedbacks">
@@ -86,8 +87,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Desc" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Rating" Type="int" Nullable="false" />
+          <Property Name="Desc" Type="nvarchar(max)" />
+          <Property Name="Rating" Type="int" />
           <Property Name="GymMemberId" Type="int" Nullable="false" />
           <Property Name="SessionId" Type="int" Nullable="false" />
         </EntityType>
@@ -504,8 +505,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="Rating" Type="Int32" Nullable="false" />
+          <Property Name="Desc" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Rating" Type="Int32" Nullable="true" />
           <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberSessionFeedback" FromRole="SessionFeedback" ToRole="GymMember" />
           <Property Name="GymMemberId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Session" Relationship="FitnessGuruModel.SessionSessionFeedback" FromRole="SessionFeedback" ToRole="Session" />
@@ -568,6 +569,7 @@
           <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberPersonalAppointmentRequest" FromRole="PersonalAppointmentRequest" ToRole="GymMember" />
           <Property Name="GymMemberId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TrainerPersonalAppointmentSession" Relationship="FitnessGuruModel.PersonalAppointmentRequestTrainerPersonalAppointmentSession" FromRole="PersonalAppointmentRequest" ToRole="TrainerPersonalAppointmentSession" />
+          <Property Name="Rating" Type="Int32" Nullable="true" />
         </EntityType>
         <Association Name="GymMemberPersonalAppointmentRequest">
           <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="1" />
@@ -737,6 +739,7 @@
           <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
           <ScalarProperty Name="Feedback" ColumnName="Feedback" />
           <ScalarProperty Name="GymMemberId" ColumnName="GymMemberId" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

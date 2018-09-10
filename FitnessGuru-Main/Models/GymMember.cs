@@ -11,7 +11,8 @@ namespace FitnessGuru_Main.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class GymMember
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -27,11 +28,15 @@ namespace FitnessGuru_Main.Models
             this.JoinedGroups = new HashSet<PartnerGroup>();
             this.GroupActivities = new HashSet<GroupActivity>();
         }
-    
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString ="0:yyyy-MM-dd", ApplyFormatInEditMode = true)]
         public System.DateTime DOB { get; set; }
+
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string ProfilePicPath { get; set; }

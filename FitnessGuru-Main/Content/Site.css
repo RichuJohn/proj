@@ -38,3 +38,7 @@ select.form-block,
 textarea.form-block {
     max-width: none;
 }
+
+.navbar {
+    color: black;
+}
