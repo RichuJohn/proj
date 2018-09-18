@@ -7,11 +7,12 @@
 
 @if (!isSessionEmpty)
 {
-    <div class="row">
+<div class="row">
 
-        <h2 class="col-sm-6">These are the sessions created by you</h2>
-        <h2>@Html.ActionLink("Create New", "Create", "Sessions", null, new { @class = "btn btn-primary" })</h2>
-    </div>
+    <h2 class="col-xs-6">These are the sessions managed by you</h2>
+    <h2 class="col-xs-2">@Html.ActionLink("Create New", "Create", "Sessions", null, new { @class = "btn btn-primary" })</h2>
+    <h2 class="col-xs-2">@Html.ActionLink("View History", "History", "Trainers", null, new { @class = "btn btn-info" })</h2>
+</div>
 
     <table class="table">
         <tr>

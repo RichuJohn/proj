@@ -10,9 +10,12 @@ namespace FitnessGuru_Main.Controllers
     {
         public ActionResult Index()
         {
-            if( Request.IsAuthenticated){
+            if (Request.IsAuthenticated)
+            {
                 return RedirectToAction("Index", "GymMembers");
-            } else {
+            }
+            else
+            {
                 return View();
             }
         }
@@ -30,5 +33,12 @@ namespace FitnessGuru_Main.Controllers
 
             return View();
         }
+
+        public ActionResult TestReact()
+        {
+            return View();
+        }
+
+       
     }
 }

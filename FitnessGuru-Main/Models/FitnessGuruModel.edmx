@@ -62,6 +62,22 @@
           <Property Name="GymMembers_Id" Type="int" Nullable="false" />
           <Property Name="JoinedGroups_Id" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Notifications">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Desc" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="GymMemberId" Type="int" Nullable="false" />
+          <Property Name="NotificationType_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NotificationTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="PartnerGroups">
           <Key>
             <PropertyRef Name="Id" />
@@ -143,6 +159,18 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="GroupJoinRequests">
+              <PropertyRef Name="GymMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GymMemberNotification">
+          <End Role="GymMembers" Type="Self.GymMembers" Multiplicity="1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMembers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notifications">
               <PropertyRef Name="GymMemberId" />
             </Dependent>
           </ReferentialConstraint>
@@ -255,6 +283,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_NotificationNotificationType">
+          <End Role="NotificationTypes" Type="Self.NotificationTypes" Multiplicity="1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NotificationTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="NotificationType_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_NotificationNotificationTypes">
+          <End Role="NotificationTypes" Type="Self.NotificationTypes" Multiplicity="1" />
+          <End Role="Notifications" Type="Self.Notifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NotificationTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notifications">
+              <PropertyRef Name="NotificationType_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PartnerGroupGroupActivity">
           <End Role="PartnerGroups" Type="Self.PartnerGroups" Multiplicity="1" />
           <End Role="GroupActivities" Type="Self.GroupActivities" Multiplicity="*" />
@@ -310,6 +362,8 @@
           <EntitySet Name="GymMembers" EntityType="Self.GymMembers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GymMemberSession1" EntityType="Self.GymMemberSession1" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GymMembersInPartnerGroup" EntityType="Self.GymMembersInPartnerGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notifications" EntityType="Self.Notifications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NotificationTypes" EntityType="Self.NotificationTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PartnerGroups" EntityType="Self.PartnerGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PersonalAppointmentRequests1" EntityType="Self.PersonalAppointmentRequests1" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SessionFeedbacks" EntityType="Self.SessionFeedbacks" Schema="dbo" store:Type="Tables" />
@@ -326,6 +380,10 @@
           <AssociationSet Name="FK_GymMemberGroupJoinRequest" Association="Self.FK_GymMemberGroupJoinRequest">
             <End Role="GymMembers" EntitySet="GymMembers" />
             <End Role="GroupJoinRequests" EntitySet="GroupJoinRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GymMemberNotification" Association="Self.FK_GymMemberNotification">
+            <End Role="GymMembers" EntitySet="GymMembers" />
+            <End Role="Notifications" EntitySet="Notifications" />
           </AssociationSet>
           <AssociationSet Name="FK_GymMemberPartnerGroup" Association="Self.FK_GymMemberPartnerGroup">
             <End Role="GymMembers" EntitySet="GymMembers" />
@@ -362,6 +420,14 @@
           <AssociationSet Name="FK_GymMemberTrainerPersonalAppointmentSession" Association="Self.FK_GymMemberTrainerPersonalAppointmentSession">
             <End Role="GymMembers" EntitySet="GymMembers" />
             <End Role="TrainerPersonalAppointmentSessions" EntitySet="TrainerPersonalAppointmentSessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NotificationNotificationType" Association="Self.FK_NotificationNotificationType">
+            <End Role="NotificationTypes" EntitySet="NotificationTypes" />
+            <End Role="Notifications" EntitySet="Notifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NotificationNotificationTypes" Association="Self.FK_NotificationNotificationTypes">
+            <End Role="NotificationTypes" EntitySet="NotificationTypes" />
+            <End Role="Notifications" EntitySet="Notifications" />
           </AssociationSet>
           <AssociationSet Name="FK_PartnerGroupGroupActivity" Association="Self.FK_PartnerGroupGroupActivity">
             <End Role="PartnerGroups" EntitySet="PartnerGroups" />
@@ -445,6 +511,16 @@
             <End Role="GymMember" EntitySet="GymMembers" />
             <End Role="GroupActivity" EntitySet="GroupActivities" />
           </AssociationSet>
+          <EntitySet Name="Notifications" EntityType="FitnessGuruModel.Notification" />
+          <EntitySet Name="NotificationTypes" EntityType="FitnessGuruModel.NotificationType" />
+          <AssociationSet Name="NotificationNotificationType" Association="FitnessGuruModel.NotificationNotificationType">
+            <End Role="Notification" EntitySet="Notifications" />
+            <End Role="NotificationType" EntitySet="NotificationTypes" />
+          </AssociationSet>
+          <AssociationSet Name="GymMemberNotification" Association="FitnessGuruModel.GymMemberNotification">
+            <End Role="GymMember" EntitySet="GymMembers" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GymMember">
           <Key>
@@ -469,6 +545,7 @@
           <NavigationProperty Name="GroupActivities" Relationship="FitnessGuruModel.GymMemberGroupActivity" FromRole="GymMember" ToRole="GroupActivity" />
           <Property Name="UserId" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="Gender" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Notifications" Relationship="FitnessGuruModel.GymMemberNotification" FromRole="GymMember" ToRole="Notification" />
         </EntityType>
         <EntityType Name="Session">
           <Key>
@@ -677,6 +754,40 @@
           <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="*" />
           <End Type="FitnessGuruModel.GroupActivity" Role="GroupActivity" Multiplicity="*" />
         </Association>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Desc" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="NotificationType" Relationship="FitnessGuruModel.NotificationNotificationType" FromRole="Notification" ToRole="NotificationType" />
+          <NavigationProperty Name="GymMember" Relationship="FitnessGuruModel.GymMemberNotification" FromRole="Notification" ToRole="GymMember" />
+          <Property Name="GymMemberId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NotificationType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Notification" Relationship="FitnessGuruModel.NotificationNotificationType" FromRole="NotificationType" ToRole="Notification" />
+        </EntityType>
+        <Association Name="NotificationNotificationType">
+          <End Type="FitnessGuruModel.Notification" Role="Notification" Multiplicity="1" />
+          <End Type="FitnessGuruModel.NotificationType" Role="NotificationType" Multiplicity="1" />
+        </Association>
+        <Association Name="GymMemberNotification">
+          <End Type="FitnessGuruModel.GymMember" Role="GymMember" Multiplicity="1" />
+          <End Type="FitnessGuruModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GymMember">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="GymMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -772,6 +883,23 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Notifications">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.Notification)">
+        <MappingFragment StoreEntitySet="Notifications">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Desc" ColumnName="Desc" />
+          <ScalarProperty Name="GymMemberId" ColumnName="GymMemberId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NotificationTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(FitnessGuruModel.NotificationType)">
+        <MappingFragment StoreEntitySet="NotificationTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="GymMemberSession1" TypeName="FitnessGuruModel.GymMemberSession1" StoreEntitySet="GymMemberSession1">
       <EndProperty Name="GymMember">
         <ScalarProperty Name="Id" ColumnName="GymMembers_Id" />
@@ -802,6 +930,14 @@
       </EndProperty>
       <EndProperty Name="GroupActivity">
         <ScalarProperty Name="Id" ColumnName="GroupActivities_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="NotificationNotificationType" TypeName="FitnessGuruModel.NotificationNotificationType" StoreEntitySet="Notifications">
+      <EndProperty Name="NotificationType">
+        <ScalarProperty Name="Id" ColumnName="NotificationType_Id" />
+      </EndProperty>
+      <EndProperty Name="Notification">
+        <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>

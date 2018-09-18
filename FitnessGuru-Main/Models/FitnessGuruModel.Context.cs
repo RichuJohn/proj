@@ -33,5 +33,7 @@ namespace FitnessGuru_Main.Models
         public virtual DbSet<PartnerGroup> PartnerGroups { get; set; }
         public virtual DbSet<GroupJoinRequest> GroupJoinRequests { get; set; }
         public virtual DbSet<GroupActivity> GroupActivities { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<NotificationType> NotificationTypes { get; set; }
     }
 }

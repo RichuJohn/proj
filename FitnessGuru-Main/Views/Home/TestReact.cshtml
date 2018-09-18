@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "TestReact";
+}
+
+<h2>TestReact</h2>
+
+<div id="root"></div>
+
+@section Scripts {
+    <script crossorigin type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/16.4.0/umd/react.development.js"></script>
+    <script crossorigin type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    @*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script>*@
+
+    <script type="text/javascript" src="~/Scripts/JSXTransformer.js"></script>
+    <script type="text/jsx" src="@Url.Content("~/Scripts/test.jsx")">
+    </script>
+
+    <script type="text/javascript" src="~/Scripts/custom.js"></script>
+
+}
+

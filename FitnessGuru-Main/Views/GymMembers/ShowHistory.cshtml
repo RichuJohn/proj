@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<FitnessGuru_Main.Models.Session>
 
 @{
-    ViewBag.Title = "ShowHistory";
+    ViewBag.Title = "Previous Sessions";
 }
 
-<h2>ShowHistory</h2>
+<h2>Sessions completed</h2>
 
 <table class="table">
     <tr>
@@ -18,7 +18,7 @@
             @Html.DisplayNameFor(model => model.Desc)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.GymMember.FirstName)
+            Trainer
         </th>
         <th></th>
     </tr>

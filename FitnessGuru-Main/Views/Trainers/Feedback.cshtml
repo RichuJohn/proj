@@ -1,0 +1,44 @@
+﻿@model IEnumerable<FitnessGuru_Main.Models.SessionFeedback>
+@using FitnessGuru_Main.Models
+
+@{
+    ViewBag.Title = "Feedback";
+    var session = (Session)ViewBag.session;
+}
+
+<h2>Feedbacks for @session.SessionName</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Desc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rating)
+        </th>
+        <th>
+            Member
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Desc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GymMember.FirstName)
+            </td>
+
+            <td>
+                @Html.ActionLink("Reply", "Reply", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

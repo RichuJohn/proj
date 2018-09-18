@@ -148,7 +148,7 @@ namespace FitnessGuru_Main.Controllers
         {
             var userId = User.Identity.GetUserId();
             var user = db.GymMembers.Where(c => c.UserId == userId).First();
-            var sessions = db.Sessions.Where(c => c.TrainerId == user.Id).Include(s => s.GymMember);
+            var sessions = db.Sessions.Where(c => c.TrainerId == user.Id && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0)).Include(s => s.GymMember);
             return View(sessions.ToList());
         }
 
