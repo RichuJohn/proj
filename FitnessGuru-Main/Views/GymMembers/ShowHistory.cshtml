@@ -38,7 +38,7 @@
             @Html.DisplayFor(modelItem => item.GymMember.FirstName)
         </td>
         <td>
-            @Html.ActionLink("Provide Feedback", "Feedback", "Sessions", new { id=item.Id }, new { @class = "btn btn-primary btn-sm"})
+            @Html.ActionLink("Provide Feedback", "Feedback", "GymMembers", new { id=item.Id }, new { @class = "btn btn-primary btn-sm"})
         </td>
     </tr>
 }

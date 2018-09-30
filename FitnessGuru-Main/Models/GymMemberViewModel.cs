@@ -14,4 +14,10 @@ namespace FitnessGuru_Main.Models
         public ICollection<Session> JoinedSessions { get; set; }
         public ICollection<Session> CompleteSessions { get; set; }
     }
+
+    public class TrainerIndexViewModel
+    {
+        public ICollection<Session> ManagingSessions { get; set; }
+        public ICollection<Session> UpcomingSessions { get; set; }
+    }
 }

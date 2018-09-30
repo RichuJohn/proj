@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+@using FitnessGuru_Main.Models
 <html>
 <head>
     <meta charset="utf-8" />
@@ -9,28 +10,51 @@
 
 </head>
 <body>
-<div class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            @Html.ActionLink("FITNESS GURU", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                <li>@Html.ActionLink("About", "About", "Home")</li>
-                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-            </ul>
-            @Html.Partial("_LoginPartial")
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("FITNESS GURU", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav main-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home", null, new { id = "homeId", @class = "nav-item" })</li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        @*<div class="col-md-3 col-xs-6">
+                                @using (Html.BeginForm("ShowHistory", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <div>
+                                                <input type="submit" value="View History" class="btn btn-default control-label h3" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                            </div>*@
+                        var controller = User.IsInRole(RoleName.Trainer) ? "Trainers" : "GymMembers";
+                        var action = User.IsInRole(RoleName.Trainer) ? "History" : "ShowHistory";
+                        <li>@Html.ActionLink("Session History", @action, @controller, null, new { id = "historyId", @class = "nav-item" })</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("About", "About", "Home", null, new { id = "aboutId", @class = "nav-item" })</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Home", null, new { id = "contactId", @class = "nav-item" })</li>
+                    }
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
         </div>
     </div>
-</div>
 
-<div class="container body-content">
+    <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
@@ -45,7 +69,7 @@
     <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
-    
+
 
     <script type="text/javascript">
         $(function () {
@@ -58,6 +82,15 @@
             $('.date').datetimepicker({
                 format: 'YYYY-MM-DD'
             });
+        });
+
+        $(function () {
+            $(".nav-item").on("click", function () {
+                var selectedItem = $(".nav-selected");
+                selectedItem.removeClass("nav-selected");
+
+                $(this).addClass("nav-selected");
+            })
         });
     </script>
 

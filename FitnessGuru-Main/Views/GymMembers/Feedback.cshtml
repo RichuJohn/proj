@@ -1,4 +1,4 @@
-﻿@*@model FitnessGuru_Main.Models.SessionFeedbackViewModel
+﻿@model FitnessGuru_Main.Models.SessionFeedbackViewModel
 @using FitnessGuru_Main.Models
 
 
@@ -50,7 +50,7 @@
 </div>
 
 
-@using (Html.BeginForm("Feedback", "Sessions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Feedback", "GymMembers", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
 
@@ -69,6 +69,7 @@
             @Html.LabelFor(model => model.feedback.Desc, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.feedback.Desc, new { @class = "form-control", rows = "6", cols = "20" })
+                @*@Html.ValidationMessageFor(model => model.feedback.Desc, "", new { @class = "text-danger" })*@
             </div>
         </div>
 
@@ -93,4 +94,4 @@
 
 <p>
     @Html.ActionLink("Back to History", "ShowHistory", "GymMembers")
-</p>*@
+</p>

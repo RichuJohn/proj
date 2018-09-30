@@ -30,10 +30,8 @@
         <EntityTypeShape EntityType="FitnessGuruModel.NotificationTypes" Width="1.5" PointX="13.125" PointY="2.125" />
         <AssociationConnector Association="FitnessGuruModel.NotificationNotificationTypes" />
         <AssociationConnector Association="FitnessGuruModel.GymMemberNotification" />
-        <EntityTypeShape EntityType="FitnessGuruModel.Notification" Width="1.5" PointX="14.375" PointY="5.375" />
         <EntityTypeShape EntityType="FitnessGuruModel.NotificationType" Width="1.5" PointX="14" PointY="8.625" />
         <AssociationConnector Association="FitnessGuruModel.NotificationNotificationType" />
-        <AssociationConnector Association="FitnessGuruModel.GymMemberNotification" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity.EntityFramework;
+using FitnessGuru_Main.utils;
 
 namespace FitnessGuru_Main.Controllers
 {
@@ -73,12 +75,20 @@ namespace FitnessGuru_Main.Controllers
                 return View(model);
             }
 
+            //temp code
+            var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
+            var roleManager = new RoleManager<IdentityRole>(roleStore);
+            await roleManager.CreateAsync(new IdentityRole(RoleName.Member));
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
+                    //var user = User.Identity.GetUserId();
+                    //var user = await UserManager.FindByNameAsync(model.Email);
+                    
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -155,6 +165,13 @@ namespace FitnessGuru_Main.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+
+                    //Temp Code
+                    var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
+                    var roleManager = new RoleManager<IdentityRole>(roleStore);
+                    //await roleManager.CreateAsync(new IdentityRole(RoleName.Member));
+                    await UserManager.AddToRoleAsync(user.Id, RoleName.Member);
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -177,6 +194,13 @@ namespace FitnessGuru_Main.Controllers
 
                     ModelDbContext.GymMembers.Add(gymMember);
                     ModelDbContext.SaveChanges();
+
+
+                    // send email
+                    var salutation = model.Gender == "Male" ? "Mr." : "Miss.";
+                    EmailSender es = new EmailSender();
+                    //es.Send(model.Email,"Registration Successful", "Dear " + salutation + model.LastName + ", \n\n" + EmailBody.WelcomeUser);
+                    es.Send(model.Email, salutation + model.LastName, "RegistrationSuccess", null);
 
                     return RedirectToAction("Index", "Home");
                 }

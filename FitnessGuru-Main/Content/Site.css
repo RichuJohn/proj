@@ -42,7 +42,7 @@ textarea,
     }
 
 .navbar {
-    color: black;
+    /*color: orange !important;*/
     min-height: 50px;
 }
 
@@ -62,6 +62,7 @@ textarea,
 .date, .datetime {
     color: black;
 }
+
 
 
 @media only screen and (max-width: 600px) {
@@ -113,5 +114,10 @@ textarea,
         top: 46%;
     }
 }
+
+.nav-selected {
+    color: orange !important;
+}
+
 
 

@@ -50,13 +50,7 @@
             @Html.DisplayFor(model => model.AddressLine2)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ProfilePicPath)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ProfilePicPath)
-        </dd>
+      
 
         <dt>
             @Html.DisplayNameFor(model => model.Desc)
@@ -66,13 +60,7 @@
             @Html.DisplayFor(model => model.Desc)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
+      
 
         <dt>
             @Html.DisplayNameFor(model => model.Gender)
@@ -85,6 +73,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |*@
+    @Html.ActionLink("Back to Home", "Index", "Trainers")
 </p>

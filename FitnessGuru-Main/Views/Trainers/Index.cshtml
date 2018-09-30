@@ -1,0 +1,78 @@
+﻿@model FitnessGuru_Main.Models.TrainerIndexViewModel
+
+@{
+    ViewBag.Title = "Trainer Home";
+}
+
+<h2>Welcome @ViewBag.Name</h2>
+
+@{
+    var isManagingSessionsEmpty = Model.ManagingSessions.Count() == 0;
+    var isUpcomingSessionsEmpty = Model.UpcomingSessions.Count() == 0;
+}
+
+@if (!isManagingSessionsEmpty)
+{
+    <div class="row">
+
+        <h3 class="col-xs-6">These are the sessions managed by you</h3>
+        <h3 class="col-xs-2">@Html.ActionLink("Create New", "Create", "Sessions", null, new { @class = "btn btn-primary" })</h3>
+        @*<h2 class="col-xs-2">@Html.ActionLink("View History", "History", "Trainers", null, new { @class = "btn btn-info" })</h2>*@
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ManagingSessions.FirstOrDefault().SessionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManagingSessions.FirstOrDefault().SessionAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManagingSessions.FirstOrDefault().isCancelled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManagingSessions.FirstOrDefault().Desc)
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.ManagingSessions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SessionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SessionAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.isCancelled)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Desc)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "Sessions", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" }) |
+                    @Html.ActionLink("View Joined Members", "ListMembers", "Sessions", new { id = item.Id }, new { @class = "btn btn-success btn-sm" }) |
+                    @Html.ActionLink("Delete", "Delete", "Sessions", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <div class="row">
+
+        <h3 class="col-sm-6">You are not managing any sessions</h3>
+        <h3>@Html.ActionLink("Create New", "Create", "Sessions", null, new { @class = "btn btn-primary" })</h3>
+        @*<h2 class="col-xs-2">@Html.ActionLink("View History", "History", "Trainers", null, new { @class = "btn btn-info" })</h2>*@
+    </div>
+}
+
+@*<p>
+    @Html.ActionLink("Back to Home", "Index")
+</p>*@

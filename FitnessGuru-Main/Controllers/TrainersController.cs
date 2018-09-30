@@ -11,9 +11,44 @@ using Microsoft.AspNet.Identity;
 
 namespace FitnessGuru_Main.Controllers
 {
+    [Authorize(Roles = RoleName.Trainer)]
     public class TrainersController : Controller
     {
         private FitnessGuruModelContainer db = new FitnessGuruModelContainer();
+
+        public ActionResult Index()
+        {
+
+            var userId = User.Identity.GetUserId();
+            GymMember user = db.GymMembers.Where(c => c.UserId == userId).FirstOrDefault();
+
+            ViewBag.Name = user.FirstName;
+
+            var sessions = db.Sessions
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .Include(s => s.GymMember)
+                .ToList();
+
+            var UpcomingSessions = sessions
+                                      .Where(c => c.TrainerId != user.Id && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                                      .OrderBy(c => c.SessionAt)
+                                      .ToList();
+
+
+
+            var ManagingSessions = sessions
+                .Where(c => c.TrainerId == user.Id && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .OrderBy(c => c.SessionAt)
+                .ToList();
+
+            var sb = new TrainerIndexViewModel()
+            {
+                ManagingSessions = ManagingSessions,
+                UpcomingSessions = UpcomingSessions
+            };
+
+            return View(sb);
+        }
 
        
         public ActionResult History()
