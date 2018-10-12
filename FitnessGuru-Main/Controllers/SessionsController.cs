@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using FitnessGuru_Main.Models;
 using FitnessGuru_Main.utils;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 
 namespace FitnessGuru_Main.Controllers
@@ -19,14 +20,8 @@ namespace FitnessGuru_Main.Controllers
         private FitnessGuruModelContainer db = new FitnessGuruModelContainer();
         private ApplicationDbContext AppDbContext = new ApplicationDbContext();
 
-        // GET: Sessions
-        public ActionResult Index()
-        {
-            var sessions = db.Sessions.Include(s => s.GymMember);
-            return View(sessions.ToList());
-        }
-
         // GET: Sessions/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -44,37 +39,14 @@ namespace FitnessGuru_Main.Controllers
         // GET: Sessions/Create
         public ActionResult Create()
         {
-            ViewBag.TrainerId = new SelectList(db.GymMembers, "Id", "FirstName");
-            return View();
-        }
-
-        // POST: Sessions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(SessionCreateViewModel model)
-        {
             var trainerId = User.Identity.GetUserId();
             var user = db.GymMembers.Where(c => c.UserId == trainerId).FirstOrDefault();
 
-            if (ModelState.IsValid)
-            {
-                var session = new Session()
-                {
-                    SessionName = model.SessionName,
-                    SessionAt = model.SessionAt,
-                    Desc = model.Desc,
-                    TrainerId = user.Id,
-                };
-                db.Sessions.Add(session);
-                db.SaveChanges();
-                return RedirectToAction("Index", "Trainers");
-            }
-
-            ViewBag.TrainerId = new SelectList(db.GymMembers, "Id", "FirstName", trainerId);
-            return View(model);
+            ViewBag.Trainer = new SelectList(db.GymMembers, "Id", "FirstName");
+            ViewBag.UserId = user.Id;
+            return View();
         }
+
 
         // GET: Sessions/Edit/5
         public ActionResult Edit(int? id)
@@ -88,40 +60,37 @@ namespace FitnessGuru_Main.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.TrainerId = new SelectList(db.GymMembers, "Id", "FirstName", session.TrainerId);
-            return View(session);
-        }
 
-        // POST: Sessions/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,SessionName,SessionAt,isCancelled,Desc,TrainerId")] Session session)
-        {
-            if (ModelState.IsValid)
+            IQueryable<ApplicationUser> Trainers = null;
+            
+            if (AppDbContext != null)
             {
-                db.Entry(session).State = EntityState.Modified;
-                db.SaveChanges();
-
-                var sessionTemp = db.Sessions.Include(c => c.GymMembers)
-                    .Include(c => c.GymMember)
-                    .Where(c => c.Id == session.Id).FirstOrDefault();
-
-                if (session.isCancelled)
+                var roles = AppDbContext.Roles.Where(r => r.Name == RoleName.Trainer);
+                if (roles.Any())
                 {
-                    EmailSender es = new EmailSender();
-                    foreach (var member in sessionTemp.GymMembers)
-                    {
-                        var salutation = member.Gender == "Male" ? "Mr." : "Miss.";
-                        es.Send(AppDbContext.Users.Find(member.UserId).Email, salutation + member.LastName, "SessionDelete", sessionTemp);
-                    }
+                    var roleId = roles.First().Id;
+                    Trainers = AppDbContext.Users.Where(c => c.Roles.Any(r => r.RoleId == roleId));
                 }
-                return RedirectToAction("Index", "Trainers");
             }
-            ViewBag.TrainerId = new SelectList(db.GymMembers, "Id", "FirstName", session.TrainerId);
+
+            var trainerIds = new ArrayList();
+
+            foreach (ApplicationUser trainer in Trainers)
+            {
+                trainerIds.Add(trainer.Id);
+            }
+
+            var TrainersInApp = db.GymMembers.ToList().Where(c => trainerIds.Contains(c.UserId));
+
+            
+            var trainerId = User.Identity.GetUserId();
+            var user = db.GymMembers.Where(c => c.UserId == trainerId).FirstOrDefault();
+            ViewBag.UserId = user.Id;
+
+            ViewBag.TrainerId = new SelectList(TrainersInApp, "Id", "FirstName", session.TrainerId);
             return View(session);
         }
+
 
         // GET: Sessions/Delete/5
         public ActionResult Delete(int? id)
@@ -185,89 +154,6 @@ namespace FitnessGuru_Main.Controllers
             Session session = db.Sessions.Find(id);
             return View(session.GymMembers);
         }
-
-        //[Authorize(Roles = RoleName.Member)]
-        //public ActionResult Feedback(int? id)
-        //{
-        //    ViewBag.FeedbackStatus = "Please tell us how you felt";
-
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Session session = db.Sessions.Find(id);
-        //    if (session == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-
-        //    var gymMemberId = User.Identity.GetUserId();
-        //    var user = db.GymMembers.Where(c => c.UserId == gymMemberId).FirstOrDefault();
-
-        //    // todo check if the user is indeed a user joined in that session
-
-        //    SessionFeedback sessionFeedback = session.SessionFeedbacks.Where(c => c.GymMemberId == user.Id).FirstOrDefault();
-
-        //    SessionFeedbackViewModel sessionFeedbackViewModel = new SessionFeedbackViewModel()
-        //    {
-        //        session = session,
-        //        feedback = sessionFeedback,
-        //    };
-
-        //    return View(sessionFeedbackViewModel);
-
-        //}
-
-
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = RoleName.Member)]
-        //public ActionResult Feedback(SessionFeedbackViewModel model)
-        //{
-
-        //    ViewBag.FeedbackStatus = "Thankyou.. Your feedback has been duely noted";
-
-        //    var gymMemberId = User.Identity.GetUserId();
-        //    var user = db.GymMembers.Where(c => c.UserId == gymMemberId).FirstOrDefault();
-
-        //    Session session = db.Sessions.Find(model.session.Id);
-        //    SessionFeedback sessionFeedback = new SessionFeedback()
-        //    {
-        //        GymMemberId = user.Id,
-        //        SessionId = model.session.Id,
-        //        Desc = model.feedback.Desc,
-        //        Rating = model.feedback.Rating,
-        //    };
-
-        //    // see if the user already provided a feedback
-        //    var userFeedbackForSession = session.SessionFeedbacks.Where(c => c.GymMemberId == user.Id).FirstOrDefault();
-
-        //    if (userFeedbackForSession != null)
-        //    {
-        //        //session.SessionFeedbacks.Remove(userFeedbackForSession);
-        //        //db.Entry(session).State = EntityState.Modified;
-        //        //db.SaveChanges();
-        //        //session.SessionFeedbacks.Add(sessionFeedback);
-               
-        //        userFeedbackForSession.Desc = sessionFeedback.Desc;
-        //        userFeedbackForSession.Rating = sessionFeedback.Rating;
-        //    } else {
-        //        session.SessionFeedbacks.Add(sessionFeedback);
-        //    }
-
-        //    db.Entry(session).State = EntityState.Modified;
-        //    db.SaveChanges();
-
-        //    SessionFeedbackViewModel sessionFeedbackViewModel = new SessionFeedbackViewModel()
-        //    {
-        //        session = session,
-        //        feedback = session.SessionFeedbacks.Where(c => c.GymMemberId == user.Id).FirstOrDefault(),
-        //    };
-        //    return View(sessionFeedbackViewModel);
-        //}
-
-
 
         protected override void Dispose(bool disposing)
         {

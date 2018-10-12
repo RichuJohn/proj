@@ -5,46 +5,63 @@
 }
 
 <h2>Sessions completed</h2>
+<div style="margin-top: 65px">
+    <table id="previousSessions" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.SessionName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SessionAt)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Desc)
+                </th>
+                <th>
+                    Trainer
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SessionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SessionAt)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Desc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GymMember.FirstName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Provide Feedback", "Feedback", "GymMembers", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.SessionName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SessionAt)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Desc)
-        </th>
-        <th>
-            Trainer
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SessionName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SessionAt)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Desc)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GymMember.FirstName)
-        </td>
-        <td>
-            @Html.ActionLink("Provide Feedback", "Feedback", "GymMembers", new { id=item.Id }, new { @class = "btn btn-primary btn-sm"})
-        </td>
-    </tr>
-}
-
-</table>
-
-<p>
+<p style ="margin-top: 50px">
     @Html.ActionLink("Back to Home", "Index")
 </p>
+
+@section scripts{
+    <script>
+        $(document).ready(function() {
+            var previousSessionsTable = $("#previousSessions")
+            previousSessionsTable.DataTable({
+                "order": [[1, "asc"]],
+            });
+        });
+    </script>
+}

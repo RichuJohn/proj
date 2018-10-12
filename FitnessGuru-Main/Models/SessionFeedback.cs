@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations;
+
 namespace FitnessGuru_Main.Models
 {
     using System;
@@ -15,7 +17,11 @@ namespace FitnessGuru_Main.Models
     public partial class SessionFeedback
     {
         public int Id { get; set; }
+
+        [Display(Name = "Feedback")]
         public string Desc { get; set; }
+
+        [Display(Name = "Rating")]
         public Nullable<int> Rating { get; set; }
         public int GymMemberId { get; set; }
         public int SessionId { get; set; }

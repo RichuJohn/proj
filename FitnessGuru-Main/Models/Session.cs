@@ -23,12 +23,18 @@ namespace FitnessGuru_Main.Models
         }
     
         public int Id { get; set; }
+        [Display(Name = "Session Name")]
         public string SessionName { get; set; }
 
+        [Display(Name = "Session Scheduled At")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public System.DateTime SessionAt { get; set; }
+
+        [Display(Name = "Cancel Session")]
         public bool isCancelled { get; set; }
+
+        [Display(Name = "Short Description")]
         public string Desc { get; set; }
         public int TrainerId { get; set; }
     

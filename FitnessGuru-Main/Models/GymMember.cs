@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations;
+
 namespace FitnessGuru_Main.Models
 {
     using System;
@@ -30,12 +32,27 @@ namespace FitnessGuru_Main.Models
         }
     
         public int Id { get; set; }
+
+        [Display(Name="First Name")]
+        [Required]
         public string FirstName { get; set; }
+
+        [Display(Name="Last Name")]
         public string LastName { get; set; }
+
+        [Display(Name="Date of Birth")]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime DOB { get; set; }
+
+        [Display(Name="Address Line 1")]
         public string AddressLine1 { get; set; }
+
+        [Display(Name = "Address Line 2")]
         public string AddressLine2 { get; set; }
         public string ProfilePicPath { get; set; }
+
+        [Display(Name = "What make you unique")]
         public string Desc { get; set; }
         public string UserId { get; set; }
         public string Gender { get; set; }

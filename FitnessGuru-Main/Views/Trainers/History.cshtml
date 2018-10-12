@@ -6,46 +6,62 @@
 
 <h2>Past Sessions</h2>
 
-<table class="table table-responsive">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.SessionName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SessionAt)
-        </th>
-        <th>
-            @*@Html.DisplayNameFor(model => model.isCancelled)*@
-            Was Session Cancelled
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Desc)
-        </th>
-        <th></th>
-    </tr>
+<div style="margin-top:70px">
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SessionName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SessionAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.isCancelled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Desc)
-            </td>
-            <td>
-                @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
-                @Html.ActionLink("View Feedback", "Feedback", new { id = item.Id }, new {@class = "btn btn-info"})
-            </td>
-        </tr>
-    }
+    <table id="sessionHistory" class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.SessionName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SessionAt)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Desc)
+                </th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SessionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SessionAt)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.isCancelled)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Desc)
+                    </td>
+                    <td>
+                        @Html.ActionLink("View Feedback", "Feedback", new { id = item.Id }, new { @class = "btn btn-link" })
+                    </td>
+                </tr>
+            }
+        </tbody>
 
-</table>
+    </table>
+</div>
+
+<div>
+    @Html.ActionLink("Go Back", "Index", "Trainers")
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#sessionHistory").DataTable({
+                "order": [[1, "asc"]]
+            }
+            );
+        });
+    </script>
+}

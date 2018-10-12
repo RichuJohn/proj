@@ -1,81 +1,97 @@
 ﻿@model FitnessGuru_Main.Models.Session
+@using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "Edit";
 }
 
 <h2>Edit</h2>
+<div id="editTrainerId" style="display: none">@ViewBag.UserId</div>
+<div id="sessionId" style="display: none">@Model.Id</div>
+<div id="sessionStrength" style="display: none">@Model.GymMembers.Count</div>
+<div class="row">
+    <div class="col-xs-6">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editSession", data_user_id = User.Identity.GetUserId() }))
+        {
+            @Html.AntiForgeryToken()
 
+            <div class="form-horizontal">
+                <h4>Session</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Session</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SessionName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.SessionName, new { htmlAttributes = new { @class = "form-control", id = "sessionName", data_rule_invalidSessionName = "true" } })
+                        @*@Html.ValidationMessageFor(model => model.SessionName, "", new { @class = "text-danger" })*@
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SessionName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SessionName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SessionName, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SessionAt, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="datetime">
+                            @Html.EditorFor(model => model.SessionAt, new { htmlAttributes = new { @class = "form-control", id = "sessionAt", data_rule_emptySessionAt = "true", data_rule_conflictingSession = "true", data_rule_moveSessionInFutureDate = "true", data_rule_isSession24HoursAway = "true" } })
+                            @*<span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                @Html.ValidationMessageFor(model => model.SessionAt, "", new { @class = "text-danger" })*@
+                        </div>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SessionAt, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="input-group datetime">
-                    @Html.EditorFor(model => model.SessionAt, new { htmlAttributes = new { @class = "form-control" } })
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                    @Html.ValidationMessageFor(model => model.SessionAt, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.isCancelled, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.isCancelled, new { htmlAttributes = new { id = "sessionCancel" } })
+                            @*@Html.ValidationMessageFor(model => model.isCancelled, "", new { @class = "text-danger" })*@
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Desc, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Desc, new { htmlAttributes = new { @class = "form-control", id = "sessionDesc", data_rule_validDescription = "true" } })
+                        @*@Html.ValidationMessageFor(model => model.Desc, "", new { @class = "text-danger" })*@
+                    </div>
+                </div>
+
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.TrainerId, "Trainer", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("TrainerId", null, htmlAttributes: new { @class = "form-control", id = "selectTrainerId" })
+                            @Html.ValidationMessageFor(model => model.TrainerId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>*@
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" id ="submitButton" value="Save" class="btn btn-default" />
+                    </div>
                 </div>
             </div>
-        </div>
+        }
+    </div>
+    <div class="col-xs-6">
+        <div id="editCalendar">
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.isCancelled, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.isCancelled)
-                    @Html.ValidationMessageFor(model => model.isCancelled, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Desc, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Desc, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Desc, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TrainerId, "Trainer", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("TrainerId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TrainerId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
         </div>
     </div>
-}
+</div>
 
-    <div>
-        @Html.ActionLink("Go Back", "ListSessionsCreated", "GymMembers")
-    </div>
+
+
+<div>
+    @Html.ActionLink("Back to Home", "Index", "Trainers")
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+    @Scripts.Render("~/bundles/fullcalendar")
+    <script src="~/Scripts/sessionEdit.js"></script>
 }

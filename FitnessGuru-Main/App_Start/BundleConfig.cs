@@ -11,6 +11,8 @@ namespace FitnessGuru_Main
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
@@ -22,9 +24,27 @@ namespace FitnessGuru_Main
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/datatable").Include(
+                "~/Scripts/DataTables/jquery.datatables.js",
+                "~/Scripts/DataTables/datatables.bootstrap.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/fullcalendar").Include(
+                "~/Scripts/moment.js",
+                "~/Scripts/fullcalendar/fullcalendar.js",
+                //"~/Scripts/sessioncreate.js",
+                //"~/Scripts/sessionEdit.js",
+                "~/Scripts/qTip/jquery.qtip.js",
+                "~/Scripts/toastr.js"
+            ));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap-superhero.css",
-                      //"~/Content/bootstrap.css",
+                      "~/Content/datatables/css/datatables.bootstrap.css",
+                        "~/Content/fullcalendar.css",
+                        "~/Scripts/qTip/jquery.qtip.css",
+                        "~/Content/font-awesome.css",
+                        "~/Content/toastr.css",
                       "~/Content/site.css"));
         }
     }

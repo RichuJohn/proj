@@ -1,4 +1,5 @@
 ﻿@model FitnessGuru_Main.Models.Session
+@using FitnessGuru_Main.Models
 
 @{
     ViewBag.Title = "Details";
@@ -26,13 +27,13 @@
             @Html.DisplayFor(model => model.SessionAt)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.isCancelled)
-        </dt>
+        @*<dt>
+                @Html.DisplayNameFor(model => model.isCancelled)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.isCancelled)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.isCancelled)
+            </dd>*@
 
         <dt>
             @Html.DisplayNameFor(model => model.Desc)
@@ -52,7 +53,14 @@
 
     </dl>
 </div>
+
+@{
+    var controller = User.IsInRole(RoleName.Trainer) ? "Trainers" : "GymMembers";
+}
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Go Back", "ListSessionsCreated", "GymMembers")
+    @if (controller == "Trainers")
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id })@: |
+    }
+    @Html.ActionLink("Back To Home", "Index", @controller)
 </p>

@@ -1,48 +1,39 @@
-﻿@model FitnessGuru_Main.Models.GymMemberIndexViewModel
-@*@using Microsoft.AspNet.Identity*@
+﻿@using Microsoft.AspNet.Identity
+@model FitnessGuru_Main.Models.GymMemberIndexViewModel
 
 @{
     ViewBag.Title = "Member Home";
 }
 
-<h2>Welcome @ViewBag.Name</h2>
-@{
-    var isUserJoinedSessionsEmpty = Model.JoinedSessions.Count() == 0;
-    var isUpcomingSessionsEmpty = Model.CompleteSessions.Count() == 0;
-}
+<div class="row">
+    <div class="col-xs-6">
+        <h2>Welcome @ViewBag.Name</h2>
+    </div>
+    <div class="col-xs-6">
+        <h3>@Html.ActionLink("View Schedule In Calendar", "CalendarView", "GymMembers", null, new { @class = "btn btn-primary" })</h3>
+    </div>
+</div>
+
+
+@*@{
+        var isUserJoinedSessionsEmpty = Model.JoinedSessions.Count() == 0;
+        var isUpcomingSessionsEmpty = Model.CompleteSessions.Count() == 0;
+    }*@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12 col-xs-12">
-            @if (isUserJoinedSessionsEmpty)
-            {
-                <h3>Seems like you haven't enrolled for any upcoming sessions</h3>
-            }
-            else
-            {
-                <h3>Are you prepared for your upcoming sessions</h3>
-            }
+        <div class="col-xs-12">
+
+            <h3>Are you prepared for your upcoming sessions</h3>
+
         </div>
-        @*<div class="col-md-3 col-xs-6">
-            @using (Html.BeginForm("ShowHistory", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="form-group">
-                    <div class="form-group">
-                        <div>
-                            <input type="submit" value="View History" class="btn btn-default control-label h3" />
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>*@
     </div>
 
-    <div class="row">
+    <div style="margin:30px" class="row">
         <div class="col-xs-12">
-            @if (!isUserJoinedSessionsEmpty)
-            {
-                <table class="table table-responsive">
+
+            <table data-user-id="@User.Identity.GetUserId()" id="joinedsessions" class="table table-bordered table-condensed table-responsive">
+                <thead>
                     <tr>
                         <th>
                             @Html.DisplayNameFor(model => model.JoinedSessions.FirstOrDefault().SessionName)
@@ -56,127 +47,181 @@
                         <th>
                             Trainer
                         </th>
-                        <th></th>
+                        <th>Action</th>
                     </tr>
+                </thead>
 
-                    @foreach (var item in Model.JoinedSessions)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SessionName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SessionAt)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Desc)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.GymMember.FirstName)
-                            </td>
-                            <td>
+                <tbody></tbody>
 
-                                @using (Html.BeginForm("OptOutFromSession", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    <div class="form-group">
-                                        @Html.Hidden("id", item.Id)
-                                        <div class="form-group">
-                                            <div>
-                                                <input type="submit" value="Opt Out" class="btn btn-default" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
+            </table>
 
-                            </td>
-                        </tr>
-                    }
-
-                </table>
-            }
         </div>
     </div>
 
 
     <div class="row">
-
-        <div class="col-xs-12 col-xs-12">
-            @if (isUpcomingSessionsEmpty)
-            {
-                <h3>Seems like there are no sessions planned</h3>
-            }
-            else
-            {
-                <h3>Are you ready for yet another challenge!!! Join any upcoming sessions</h3>
-            }
-        </div>
-        
-
-        <div class="row">
-            <div class="col-xs-12">
-                @if (!isUpcomingSessionsEmpty)
-                {
-                    <table class="table table-responsive">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().SessionName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().SessionAt)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().Desc)
-                            </th>
-                            <th>
-                                Trainer
-                            </th>
-                            <th></th>
-                        </tr>
-
-                        @foreach (var item in Model.CompleteSessions)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SessionName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SessionAt)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Desc)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.GymMember.FirstName)
-                                </td>
-                                <td>
-                                    @*@Html.ActionLink("Join Session", "Join", new { id = item.Id })*@
-
-                                    @using (Html.BeginForm("JoinSession", "GymMembers", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        <div class="form-group">
-                                            @Html.Hidden("id", item.Id)
-                                            <div class="form-group">
-                                                <div>
-                                                    <input type="submit" value="Join Session" class="btn btn-default" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </td>
-                            </tr>
-                        }
-
-                    </table>
-                }
-                </div>
+        <div class="col-xs-12">
+            <h3>Are you ready for yet another challenge!!! Join any upcoming sessions</h3>
         </div>
     </div>
 
-    @*<p>
-        @Html.ActionLink("View Sessions Managed By You", "ListSessionsCreated", "GymMembers", new { area = "" }, new { returnUrl = "Sessions/Index", @class = "btn btn-primary" })
-    </p>*@
 
+    <div style="margin:30px" class="row">
+        <div class="col-xs-12">
+            <table data-user-id="@User.Identity.GetUserId()" id="upcomingsessions" class="table table-bordered table-condensed table-responsive">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().SessionName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().SessionAt)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CompleteSessions.FirstOrDefault().Desc)
+                        </th>
+                        <th>
+                            Trainer
+                        </th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+                <tbody></tbody>
+
+            </table>
+        </div>
+    </div>
 </div>
+
+
+@section scripts
+{
+    <script src="~/Scripts/toastr.js"></script>
+    <script>
+        $(document).ready(function () {
+            var joinedsessionstable = $("#joinedsessions")
+            var joinedtable = joinedsessionstable.DataTable(
+                {
+                    "order": [[1, "asc"]],
+
+                    ajax: {
+                        url: '/api/sessions/GetJoinedSessionsForTable/' + joinedsessionstable.attr("data-user-id"),
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "sessionName"
+                        },
+                        {
+                            data: "sessionAt",
+                            render: function (data) {
+                                return moment(data).format('YYYY-MM-DD HH:mm');
+                            }
+                        },
+                        {
+                            data: "desc"
+                        },
+                        {
+                            data: "gymMember.firstName",
+                            render: function (data, type, session) {
+                                return "<a class='btn-link' href='/gymmembers/details/" + session.trainerId + "'>" + session.gymMember.firstName + "</a>";
+                            }
+                        },
+                        {
+                            data: "id",
+                            render: function (data) {
+                                return "<button data-session-id=" + data + "  class='btn btn-default js-optout'>Opt Out</button>"
+                            }
+                        }
+                    ]
+
+                }
+            );
+            joinedsessionstable.on("click",
+                ".js-optout",
+                function () {
+                    var button = $(this)
+                    if (confirm("Are you sure you want to opt out from this session?")) {
+                        $.ajax({
+                            url: '/GymMembers/OptOutFromSession/' + button.attr("data-session-id"),
+                            method: "POST",
+                            success: function () {
+                                toastr.success("Successfully Opted Out from session");
+                                joinedtable.ajax.reload();
+                                upcomingtable.ajax.reload();
+                            },
+                            error: function () {
+                                toastr.error("Could not opt out from the session");
+
+                            }
+
+                        });
+
+                    }
+                });
+
+            var upcomingsessionstable = $("#upcomingsessions")
+            var upcomingtable = upcomingsessionstable.DataTable(
+                {
+                    "order": [[1, "asc"]],
+
+                    ajax: {
+                        url: '/api/sessions/GetUpcomingSessionsForTable/' + upcomingsessionstable.attr("data-user-id"),
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "sessionName"
+                        },
+                        {
+                            data: "sessionAt",
+                            render: function (data) {
+                                return moment(data).format('YYYY-MM-DD HH:mm');
+                            }
+                        },
+                        {
+                            data: "desc"
+                        },
+                        {
+                            data: "gymMember.firstName",
+                            render: function (data, type, session) {
+                                return "<a class='btn-link' href='/gymmembers/details/" + session.trainerId + "'>" + session.gymMember.firstName + "</a>";
+                            }
+                        },
+                        {
+                            data: "id",
+                            render: function (data) {
+                                return "<button data-session-id=" + data + "  class='btn btn-default js-joinsession'>Join Session</button>"
+                            }
+                        }
+                    ]
+
+                }
+            );
+            upcomingsessionstable.on("click",
+                ".js-joinsession",
+                function () {
+                    var button = $(this)
+                    if (confirm("Are you sure you want to join in this session?")) {
+                        $.ajax({
+                            url: '/GymMembers/JoinSession/' + button.attr("data-session-id"),
+                            method: "POST",
+                            success: function () {
+                                toastr.success("Successfully Joined Session");
+                                upcomingtable.ajax.reload();
+                                joinedtable.ajax.reload();
+                            },
+                            error: function () {
+                                toastr.error("Could not join you to the session");
+
+                            }
+
+                        });
+
+                    }
+                });
+        });
+    </script>
+}
 

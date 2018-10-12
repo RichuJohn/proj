@@ -1,14 +1,14 @@
 ﻿@model FitnessGuru_Main.Models.Session
+@using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "Delete";
 }
-
+<div id="sessionStrength" style="display: none">@Model.GymMembers.Count</div>
 <h2>Delete</h2>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Session</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -27,13 +27,6 @@
             @Html.DisplayFor(model => model.SessionAt)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.isCancelled)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.isCancelled)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Desc)
@@ -44,7 +37,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.GymMember.FirstName)
+            Trainer
         </dt>
 
         <dd>
@@ -53,12 +46,40 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "deleteSession", data_user_id = User.Identity.GetUserId() }))
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-danger" /> |
-            @Html.ActionLink("Go Back", "ListSessionsCreated", "GymMembers")
+            @Html.ActionLink("Back To Home", "Index", "Trainers")
         </div>
     }
 </div>
+
+
+@section scripts {
+    <script src="~/Scripts/toastr.js"></script>
+    <script>
+        var sessionStrength = $('#sessionStrength')[0].innerHTML;
+
+        $('#deleteSession').submit(function (e) {
+
+            var customMessage = "";
+
+            if (sessionStrength) {
+                confirmMessage =
+                    "There are  " + sessionStrength + " members enrolled in this session. Do you really want to delete it? Joined members will be notified through an email." +
+                    " Go ahead if you are sure. This action cannot be reverted";
+            } else {
+                confirmMessage = "Are you sure you want to delete this session? This action cannot be reverted";
+            }
+
+            if (!confirm(confirmMessage)) {
+                e.preventDefault();
+                toastr.warning("Session was not deleted")
+            }
+
+        })
+    </script>
+}

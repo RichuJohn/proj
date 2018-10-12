@@ -14,16 +14,16 @@ namespace FitnessGuru_Main.utils
     {
         private const String API_KEY = "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";
 
-        public void Send2(String toEmail, String subject, String contents)
-        {
-            var client = new SendGridClient(API_KEY);
-            var from = new EmailAddress("noreply@fitnessguru.com", "Fitness Guru Customer Relationship Hub");
-            var to = new EmailAddress(toEmail, "");
-            var plainTextContent = contents;
-            var htmlContent = "<p>" + contents + "</p>";
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-            var response = client.SendEmailAsync(msg);
-        }
+        //public void Send2(String toEmail, String subject, String contents)
+        //{
+        //    var client = new SendGridClient(API_KEY);
+        //    var from = new EmailAddress("noreply@fitnessguru.com", "Fitness Guru Customer Relationship Hub");
+        //    var to = new EmailAddress(toEmail, "");
+        //    var plainTextContent = contents;
+        //    var htmlContent = "<p>" + contents + "</p>";
+        //    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+        //    var response = client.SendEmailAsync(msg);
+        //}
 
 
         public void Send(String toEmail, String name, String type, Session sessionInfo)
@@ -108,8 +108,54 @@ namespace FitnessGuru_Main.utils
                               "<br>" + sessionHtml +
                               "<br>";
 
-                    Subject = "Session " + session.SessionName + "has been Cancelled/Removed";
+                    Subject = "Session " + session.SessionName + " has been Cancelled/Removed";
                     break;
+
+                case "SessionEdit":
+                    session = ((Session)sessionInfo);
+                    sessionHtml = "Session Name: " + session.SessionName + "<br>" +
+                                  "Session At: " + session.SessionAt + "<br>" +
+                                  "Trainer: " + session.GymMember.FirstName + "<br>" +
+                                  "Session Desc: " + session.Desc + "<br>";
+
+                    HtmlContent = "<div style=\"background-color:black; margin:10px; padding: 10px; width:100%; text-align:center\"> " +
+                                  "<h2 style=\"color:white\">Session Updated</h2></div>" +
+                                  "<p>Dear " + name + ", <br><br>" +
+                                  EmailBody.SessionEditNotification + "</p>" +
+                                  "<br><br><h3>Session Details</h3>" +
+                                  "<p>" + sessionHtml + "</p>" + "<br>";
+                    Content = "Dear " + name +
+                              ", " + EmailBody.SessionEditNotification +
+                              "<br>Updated Session Details" +
+                              "<br>" + sessionHtml +
+                              "<br>";
+
+                    Subject = "Session " + session.SessionName + " has been Updated";
+                    break;
+
+
+                case "SessionCreate":
+                    session = ((Session)sessionInfo);
+                    sessionHtml = "Session Name: " + session.SessionName + "<br>" +
+                                  "Session At: " + session.SessionAt + "<br>" +
+                                  "Trainer: " + session.GymMember.FirstName + "<br>" +
+                                  "Session Desc: " + session.Desc + "<br>";
+
+                    HtmlContent = "<div style=\"background-color:black; margin:10px; padding: 10px; width:100%; text-align:center\"> " +
+                                  "<h2 style=\"color:white\">Session Created</h2></div><br>" +
+                                  "<p>Dear " + name + ", <br><br>" +
+                                  EmailBody.SessionCreateNotification + "</p>" +
+                                  "<br><br><h3>Session Details</h3>" +
+                                  "<p>" + sessionHtml + "</p>" + "<br>";
+                    Content = "<br>Dear " + name +
+                              ", " + EmailBody.SessionCreateNotification +
+                              "<br>New Session Details" +
+                              "<br>" + sessionHtml +
+                              "<br>";
+
+                    Subject = "New Session created : " + session.SessionName ;
+                    break;
+
 
             }
             var client = new SendGridClient(API_KEY);
@@ -127,6 +173,8 @@ namespace FitnessGuru_Main.utils
         public const string WelcomeUser = "We are super excited to have you onboard. You can now access our website to plan your activities without any hazzle.. " +
                                            "Please feel free to reach out to us for any queries, suggestions or feedback. " +
                                            "Once again... welcome on board!";
+
+        public const string SessionCreateNotification = "New session introduced at gym. Please find the details below.";
 
         public const string SessionJoinNotification = "You have successfully joined the session";
 

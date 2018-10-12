@@ -7,38 +7,91 @@
 }
 
 <h2>Feedbacks for @session.SessionName</h2>
+<div style="margin-top: 70px">
+    <table id="sessionFeedback" class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    Feedback
+                </th>
+                <th>
+                    Star Rating
+                </th>
+                <th>
+                    Feedback provided by
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Desc)
+                    </td>
+                    <td>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Desc)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rating)
-        </th>
-        <th>
-            Member
-        </th>
-        <th></th>
-    </tr>
+                        <div id="@item.GymMemberId" class="ratingTrainer">
+                            <input type="radio" id="@item.GymMemberId+star5" name="@item.GymMemberId" value="5" /><label class="full" for="@item.GymMemberId+star5" title="Awesome - 5 stars"></label>
+                            <input type="radio" id="@item.GymMemberId+star4" name="@item.GymMemberId" value="4" /><label class="full" for="@item.GymMemberId+star4" title="Pretty good - 4 stars"></label>
+                            <input type="radio" id="@item.GymMemberId+star3" name="@item.GymMemberId" value="3" /><label class="full" for="@item.GymMemberId+star3" title="Meh - 3 stars"></label>
+                            <input type="radio" id="@item.GymMemberId+star2" name="@item.GymMemberId" value="2" /><label class="full" for="@item.GymMemberId+star2" title="Kinda bad - 2 stars"></label>
+                            <input type="radio" id="@item.GymMemberId+star1" name="@item.GymMemberId" value="1" /><label class="full" for="@item.GymMemberId+star1" title="Sucks big time - 1 star"></label>
+                        </div>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Desc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GymMember.FirstName)
-            </td>
+                        <script>
+                                var rating = @item.Rating;
+                                var element = "";
+                                switch (rating) {
+                                case 1:
+                                    element = 'star1'
+                                    break;
+                                case 2:
+                                    element = 'star2'
+                                    break;
+                                case 3:
+                                    element = 'star3'
+                                    break;
+                                case 4:
+                                    element = 'star4'
+                                    break;
+                                case 5:
+                                    element = 'star5'
+                                    break;
+                            }
 
-            <td>
-                @Html.ActionLink("Reply", "Reply", new { id = item.Id })
-            </td>
-        </tr>
-    }
+                            var id = @item.GymMemberId + '+' + element;
 
-</table>
+                            radioBtn = document.getElementById(id);
+                            radioBtn.checked = true;
+                        </script>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GymMember.FirstName)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    @Html.ActionLink("Go Back", "History", "Trainers")
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#sessionFeedback").DataTable({
+                "order": [[1, "desc"]]
+            }
+            );
+
+        });
+
+        $("input[type=radio]").attr('disabled', true);
+
+    </script>
+}
