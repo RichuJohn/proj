@@ -30,6 +30,7 @@ namespace FitnessGuru_Main.Controllers
 
             var userId = User.Identity.GetUserId();
             GymMember user = db.GymMembers.Where(c => c.UserId == userId).Include(s => s.JoinedSessions).FirstOrDefault();
+            ViewBag.UserId = user.Id;
 
             ViewBag.Name = user.FirstName;
 

@@ -21,7 +21,7 @@ namespace FitnessGuru_Main.Models
             this.GymMembers = new HashSet<GymMember>();
             this.SessionFeedbacks = new HashSet<SessionFeedback>();
         }
-    
+
         public int Id { get; set; }
         [Display(Name = "Session Name")]
         public string SessionName { get; set; }
@@ -37,7 +37,7 @@ namespace FitnessGuru_Main.Models
         [Display(Name = "Short Description")]
         public string Desc { get; set; }
         public int TrainerId { get; set; }
-    
+
         public virtual GymMember GymMember { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GymMember> GymMembers { get; set; }

@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "Member Home";
 }
+<div id="userId" style="display: none">@ViewBag.UserId</div>
 
 <div class="row">
     <div class="col-xs-6">
@@ -97,9 +98,12 @@
 
 @section scripts
 {
+
+    <script src="~/Scripts/memberSessionIndex.js"></script>
     <script src="~/Scripts/toastr.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
+
             var joinedsessionstable = $("#joinedsessions")
             var joinedtable = joinedsessionstable.DataTable(
                 {
@@ -115,7 +119,7 @@
                         },
                         {
                             data: "sessionAt",
-                            render: function (data) {
+                            render: function(data) {
                                 return moment(data).format('YYYY-MM-DD HH:mm');
                             }
                         },
@@ -124,14 +128,20 @@
                         },
                         {
                             data: "gymMember.firstName",
-                            render: function (data, type, session) {
-                                return "<a class='btn-link' href='/gymmembers/details/" + session.trainerId + "'>" + session.gymMember.firstName + "</a>";
+                            render: function(data, type, session) {
+                                return "<a class='btn-link' href='/gymmembers/details/" +
+                                    session.trainerId +
+                                    "'>" +
+                                    session.gymMember.firstName +
+                                    "</a>";
                             }
                         },
                         {
                             data: "id",
-                            render: function (data) {
-                                return "<button data-session-id=" + data + "  class='btn btn-default js-optout'>Opt Out</button>"
+                            render: function(data) {
+                                return "<button data-session-id=" +
+                                    data +
+                                    "  class='btn btn-default js-optout'>Opt Out</button>"
                             }
                         }
                     ]
@@ -140,18 +150,40 @@
             );
             joinedsessionstable.on("click",
                 ".js-optout",
-                function () {
+                function() {
                     var button = $(this)
                     if (confirm("Are you sure you want to opt out from this session?")) {
+                        var sessionId = button.attr("data-session-id");
+
                         $.ajax({
                             url: '/GymMembers/OptOutFromSession/' + button.attr("data-session-id"),
                             method: "POST",
-                            success: function () {
+                            success: function() {
                                 toastr.success("Successfully Opted Out from session");
                                 joinedtable.ajax.reload();
                                 upcomingtable.ajax.reload();
+                                data.forEach(function (item) {
+                                    if (parseInt(item.id) === parseInt(sessionId)) {
+                                        item.joined = !item.joined;
+                                        return false;
+                                    }
+                                });
+
+                                joinedSessions = [];
+                                upcomingSessions = [];
+
+                                data.forEach(function (item) {
+                                    if (item.joined)
+                                        joinedSessions.push(item);
+                                });
+
+                                data.forEach(function (item) {
+                                    if (!item.joined)
+                                        upcomingSessions.push(item);
+                                });
+
                             },
-                            error: function () {
+                            error: function() {
                                 toastr.error("Could not opt out from the session");
 
                             }
@@ -176,7 +208,7 @@
                         },
                         {
                             data: "sessionAt",
-                            render: function (data) {
+                            render: function(data) {
                                 return moment(data).format('YYYY-MM-DD HH:mm');
                             }
                         },
@@ -185,14 +217,20 @@
                         },
                         {
                             data: "gymMember.firstName",
-                            render: function (data, type, session) {
-                                return "<a class='btn-link' href='/gymmembers/details/" + session.trainerId + "'>" + session.gymMember.firstName + "</a>";
+                            render: function(data, type, session) {
+                                return "<a class='btn-link' href='/gymmembers/details/" +
+                                    session.trainerId +
+                                    "'>" +
+                                    session.gymMember.firstName +
+                                    "</a>";
                             }
                         },
                         {
                             data: "id",
-                            render: function (data) {
-                                return "<button data-session-id=" + data + "  class='btn btn-default js-joinsession'>Join Session</button>"
+                            render: function(data) {
+                                return "<button data-session-id=" +
+                                    data +
+                                    "  class='btn btn-default js-joinsession'>Join Session</button>"
                             }
                         }
                     ]
@@ -201,23 +239,82 @@
             );
             upcomingsessionstable.on("click",
                 ".js-joinsession",
-                function () {
+                function() {
                     var button = $(this)
                     if (confirm("Are you sure you want to join in this session?")) {
-                        $.ajax({
-                            url: '/GymMembers/JoinSession/' + button.attr("data-session-id"),
-                            method: "POST",
-                            success: function () {
-                                toastr.success("Successfully Joined Session");
-                                upcomingtable.ajax.reload();
-                                joinedtable.ajax.reload();
-                            },
-                            error: function () {
-                                toastr.error("Could not join you to the session");
 
+
+                        var clashing = false;
+
+                        var sessionId = button.attr("data-session-id");
+
+                        var sessionToJoin = {}
+                        var clashingSession = {}
+                        data.forEach(function (item) {
+                            if (parseInt(item.id) === parseInt(sessionId)) {
+                                sessionToJoin = item;
+                                return false;
                             }
-
                         });
+
+                        var sessionAt = moment(sessionToJoin.start, 'YYYY-MM-DDTHH:mm');
+
+                        joinedSessions.forEach(function (item) {
+                            var existingSessionStart = moment(item.start, 'YYYY-MM-DDTHH:mm');
+                            var twoHoursBeforeStart = moment(existingSessionStart).add(-2, 'hours');
+                            var twoHoursAfterStart = moment(existingSessionStart).add(2, 'hours');
+
+                            if (parseInt(sessionId) !== parseInt(item.id) &&
+                            (sessionAt.isSame(existingSessionStart) ||
+                                sessionAt.isAfter(twoHoursBeforeStart) &&
+                                sessionAt.isBefore(twoHoursAfterStart))) {
+                                clashingSession = item;
+                                clashing = true;
+                                return false;
+                            }
+                        });
+
+
+                        if (!clashing) {
+                            $.ajax({
+                                url: '/GymMembers/JoinSession/' + button.attr("data-session-id"),
+                                method: "POST",
+                                success: function() {
+                                    toastr.success("Successfully Joined Session");
+                                    upcomingtable.ajax.reload();
+                                    joinedtable.ajax.reload();
+                                    data.forEach(function (item) {
+                                        if (parseInt(item.id) === parseInt(sessionId)) {
+                                            item.joined = !item.joined;
+                                            return false;
+                                        }
+                                    });
+
+                                    joinedSessions = [];
+                                    upcomingSessions = [];
+
+                                    data.forEach(function (item) {
+                                        if (item.joined)
+                                            joinedSessions.push(item);
+                                    });
+
+                                    data.forEach(function (item) {
+                                        if (!item.joined)
+                                            upcomingSessions.push(item);
+                                    });
+
+                                },
+                                error: function() {
+                                    toastr.error("Could not join you to the session");
+
+                                }
+
+                            });
+
+                        } else {
+                            toastr.error("Cannot join. Clashing with session " + clashingSession.title);
+                        }
+
 
                     }
                 });

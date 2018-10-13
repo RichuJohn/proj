@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ac3540f6c61348ff9d1d032102ebd98e" Name="Diagram1" ZoomLevel="64" >
+      <Diagram DiagramId="ac3540f6c61348ff9d1d032102ebd98e" Name="Diagram1" ZoomLevel="71" >
         <EntityTypeShape EntityType="FitnessGuruModel.GymMember" Width="1.5" PointX="1.875" PointY="1.875" />
         <EntityTypeShape EntityType="FitnessGuruModel.Session" Width="1.5" PointX="4.875" PointY="1.25" />
         <AssociationConnector Association="FitnessGuruModel.GymMemberSession" />

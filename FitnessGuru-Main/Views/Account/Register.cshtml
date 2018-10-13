@@ -47,8 +47,20 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.Gender, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(m => m.Gender, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                    
+                    <div class="radio-inline">
+                        <label>@Html.RadioButtonFor(m => m.Gender, "Male") Male </label>
+                    </div>
+                    <div class="radio-inline">
+                        <label>@Html.RadioButtonFor(m => m.Gender, "Female") Female </label>
+                    </div>
+
+                    @*@Html.TextBoxFor(m => m.Gender, new { @class = "form-control" })*@
+                    @*<div class="radio">
+                        @Html.RadioButtonFor(m => m.Gender, "Male") Male
+                        @Html.RadioButtonFor(m => m.Gender, "Female") Female
+                        @Html.ValidationMessageFor(model => model.Gender, "", new {@class = "text-danger"})
+                    </div>*@
                 </div>
             </div>
 

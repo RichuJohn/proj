@@ -25,7 +25,6 @@
                     @Html.LabelFor(model => model.SessionName, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.SessionName, new { htmlAttributes = new { @class = "form-control", id = "sessionName", data_rule_invalidSessionName = "true" } })
-                        @*@Html.ValidationMessageFor(model => model.SessionName, "", new { @class = "text-danger" })*@
                     </div>
                 </div>
 
@@ -34,10 +33,6 @@
                     <div class="col-md-10">
                         <div class="datetime">
                             @Html.EditorFor(model => model.SessionAt, new { htmlAttributes = new { @class = "form-control", id = "sessionAt", data_rule_emptySessionAt = "true", data_rule_conflictingSession = "true", data_rule_moveSessionInFutureDate = "true", data_rule_isSession24HoursAway = "true" } })
-                            @*<span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                                @Html.ValidationMessageFor(model => model.SessionAt, "", new { @class = "text-danger" })*@
                         </div>
                     </div>
                 </div>
@@ -47,7 +42,6 @@
                     <div class="col-md-10">
                         <div class="checkbox">
                             @Html.EditorFor(model => model.isCancelled, new { htmlAttributes = new { id = "sessionCancel" } })
-                            @*@Html.ValidationMessageFor(model => model.isCancelled, "", new { @class = "text-danger" })*@
                         </div>
                     </div>
                 </div>
@@ -56,17 +50,8 @@
                     @Html.LabelFor(model => model.Desc, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Desc, new { htmlAttributes = new { @class = "form-control", id = "sessionDesc", data_rule_validDescription = "true" } })
-                        @*@Html.ValidationMessageFor(model => model.Desc, "", new { @class = "text-danger" })*@
                     </div>
                 </div>
-
-                @*<div class="form-group">
-                        @Html.LabelFor(model => model.TrainerId, "Trainer", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("TrainerId", null, htmlAttributes: new { @class = "form-control", id = "selectTrainerId" })
-                            @Html.ValidationMessageFor(model => model.TrainerId, "", new { @class = "text-danger" })
-                        </div>
-                    </div>*@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">

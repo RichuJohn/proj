@@ -7,13 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System.ComponentModel.DataAnnotations;
-
 namespace FitnessGuru_Main.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class GymMember
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -33,19 +32,19 @@ namespace FitnessGuru_Main.Models
     
         public int Id { get; set; }
 
-        [Display(Name="First Name")]
+        [Display(Name = "First Name")]
         [Required]
         public string FirstName { get; set; }
 
-        [Display(Name="Last Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name="Date of Birth")]
+        [Display(Name = "Date of Birth")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime DOB { get; set; }
 
-        [Display(Name="Address Line 1")]
+        [Display(Name = "Address Line 1")]
         public string AddressLine1 { get; set; }
 
         [Display(Name = "Address Line 2")]
@@ -56,7 +55,7 @@ namespace FitnessGuru_Main.Models
         public string Desc { get; set; }
         public string UserId { get; set; }
         public string Gender { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Session> Sessions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
