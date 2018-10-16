@@ -1,5 +1,6 @@
 ﻿@model FitnessGuru_Main.Models.RegisterViewModel
 
+
 <div style="margin-top: 10px; text-align: center;" class="row cell-border">
     <div style="display: inline-block">
         @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -19,7 +20,6 @@
                 @Html.LabelFor(m => m.FirstName, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
                     @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -27,7 +27,6 @@
                 @Html.LabelFor(m => m.LastName, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
                     @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -39,7 +38,6 @@
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
-                        @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
@@ -47,7 +45,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.Gender, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    
+
                     <div class="radio-inline">
                         <label>@Html.RadioButtonFor(m => m.Gender, "Male") Male </label>
                     </div>
@@ -55,12 +53,6 @@
                         <label>@Html.RadioButtonFor(m => m.Gender, "Female") Female </label>
                     </div>
 
-                    @*@Html.TextBoxFor(m => m.Gender, new { @class = "form-control" })*@
-                    @*<div class="radio">
-                        @Html.RadioButtonFor(m => m.Gender, "Male") Male
-                        @Html.RadioButtonFor(m => m.Gender, "Female") Female
-                        @Html.ValidationMessageFor(model => model.Gender, "", new {@class = "text-danger"})
-                    </div>*@
                 </div>
             </div>
 

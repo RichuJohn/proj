@@ -12,25 +12,18 @@
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#myCarousel" data-slide-to="1"></li>
                 <li data-target="#myCarousel" data-slide-to="2"></li>
-                <li data-target="#myCarousel" data-slide-to="3"></li>
             </ol>
 
 
             <div class="carousel-inner">
                 <div class="item active">
-                    <img class="img-responsive" src="~/images/img_bg_1.jpg" />
+                    <img class="img img-responsive" src="~/images/img_bg_1.jpg" />
                 </div>
                 <div class="item">
-                    <img class="img-responsive" src="~/images/img_bg_2.jpg" />
+                    <img class="img img-responsive" src="~/images/img_bg_3.jpg" />
                 </div>
                 <div class="item">
-                    <img class="img-responsive" src="~/images/img_bg_3.jpg" />
-                    <div class="carousel-caption">
-                        <h3>STOP WISHING, START DOING</h3>
-                    </div>
-                </div>
-                <div class="item">
-                    <img class="img-responsive" src="~/images/img_bg_4.jpg" />
+                    <img class="img img-responsive" src="~/images/img_bg_4.jpg" />
                 </div>
             </div>
         </div>
@@ -39,23 +32,14 @@
 
 <div class="row">
 
-    @*<div class="jumbotron">
-            <h2>Welcome to Fitness Guru</h2>
-            <p>
-                Come join us at FitnessGuru and take advantage of the various services that we provide you and for free.
-            </p>
-        </div>*@
-
-
-
     <div class="col-xs-6">
-        <h3>Already A Member</h3>
+        <h3 class="homepageDtl">Already A Member</h3>
         @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "btn btn-primary" })
 
 
     </div>
     <div class="col-xs-6">
-        <h3>New to Fitness Guru</h3>
+        <h3 class="homepageDtl">New to Fitness Guru</h3>
         @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "btn btn-primary" })
     </div>
 </div>

@@ -109,10 +109,11 @@
     </dl>
 </div>
 <p>
+
+    @Html.ActionLink("Back to List", "Index")
     @if (!IsTrainer)
     {
-        @Html.ActionLink("Convert to Trainer", "AddAsTrainer", new {UserId = Model.UserId}) @:|
+        @:| @Html.ActionLink("Convert to Trainer", "AddAsTrainer", new { UserId = Model.UserId }) 
 
     }
-    @Html.ActionLink("Back to List", "Index")
 </p>

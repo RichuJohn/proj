@@ -22,9 +22,11 @@ namespace FitnessGuru_Main.Controllers
         // GET: GymMembers
         public ActionResult Index()
         {
+            // redirect to admin index page
             if (User.IsInRole(RoleName.Admin))
                 return RedirectToLocal("/Admin/Index");
 
+            // redirect to trianer index page
             if (User.IsInRole(RoleName.Trainer))
                 return RedirectToLocal("/Trainers/Index");
 
@@ -34,13 +36,14 @@ namespace FitnessGuru_Main.Controllers
 
             ViewBag.Name = user.FirstName;
 
+            // get the list of upcoming sessions that have not been cancelled
             var sessions = db.Sessions
                                 .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
                                 .Include(s => s.GymMember)
                                 .ToList();
 
+            // get the list of upcoming sessions where the user hasnt yet joined
             var sessionsWithoutUser =
-                //!User.IsInRole(RoleName.Trainer) ? 
                 sessions
                     .Where(c => !c.GymMembers.Contains(user))
                     .OrderBy(c => c.SessionAt)
@@ -48,6 +51,7 @@ namespace FitnessGuru_Main.Controllers
 
 
 
+            // get the list of sessions the user has joined
             var joinedSessions = user.JoinedSessions
                     .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
                     .OrderBy(c => c.SessionAt)

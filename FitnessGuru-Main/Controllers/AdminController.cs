@@ -31,13 +31,15 @@ namespace FitnessGuru_Main.Controllers
             roleManager = new RoleManager<IdentityRole>(roleStore);
         }
 
-        // GET: Admin
+        // Get all the members in the gym
         public ActionResult Index()
         {
             var members = db.GymMembers;
             return View(members.ToList());
         }
 
+
+        // get the details of the user
         public ActionResult Details(int? id)
         {
             GymMember user = db.GymMembers.Find(id);
@@ -45,13 +47,17 @@ namespace FitnessGuru_Main.Controllers
         }
 
 
+        // method to add trainer role to user
         public ActionResult AddAsTrainer(string UserId)
         {
+            // add trainer role if it not already exist
             if (!roleManager.RoleExists(RoleName.Trainer))
             {
                 roleManager.Create(new IdentityRole(RoleName.Trainer));
             }
 
+
+            // make a specific user as a trainer
             GymMember user = db.GymMembers.Where(c => c.UserId == UserId).Include(s => s.JoinedSessions).FirstOrDefault();
             if (!userManager.IsInRole(UserId, RoleName.Trainer))
             {

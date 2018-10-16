@@ -33,14 +33,12 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.SessionAt)
                     </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.isCancelled)
-                        </td>*@
+                    
                     <td>
                         @Html.DisplayFor(modelItem => item.Desc)
                     </td>
                     <td>
-                        @Html.ActionLink("View Feedback", "Feedback", new { id = item.Id }, new { @class = "btn btn-link" })
+                        @Html.ActionLink("View Feedbacks", "Feedback", new { id = item.Id }, new { @class = "btn btn-link" })
                     </td>
                 </tr>
             }

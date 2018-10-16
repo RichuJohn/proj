@@ -21,12 +21,15 @@ namespace FitnessGuru_Main.Controllers.Api
         private FitnessGuruModelContainer db;
         private ApplicationDbContext AppDbContext;
 
+        // constructor to create the db contexts
         public SessionsController()
         {
             db = new FitnessGuruModelContainer();
             AppDbContext = new ApplicationDbContext();
         }
 
+
+        // API to get list of sessions that are upcoming and not cancelled
         [HttpGet]
         public IEnumerable<SessionCalendarDto> GetUpcomingSessionsForCalendar()
         {
@@ -36,6 +39,8 @@ namespace FitnessGuru_Main.Controllers.Api
         }
 
 
+        // API to get list of sessions that are upcoming and not cancelled
+        // specifically formatted to be able to directly map to calendar events
         [HttpGet]
         public IEnumerable<SessionCalendarDto> GetUpcomingSessionsForCalendar(int id)
         {
@@ -44,6 +49,8 @@ namespace FitnessGuru_Main.Controllers.Api
                 .ToList().Select(Mapper.Map<Session, SessionCalendarDto>);
         }
 
+
+        // get list of sessions that a member has joined and all the upcoming sessions
         [HttpGet]
         public IEnumerable<MemberSessionDto> GetUpcomingSessionsForMember(int id)
         {
@@ -80,6 +87,8 @@ namespace FitnessGuru_Main.Controllers.Api
         }
 
 
+
+        // API to get the list of sessions to be put in a table
         [HttpGet]
         public IEnumerable<SessionDto> GetUpcomingSessionsForTable(String id)
         {
@@ -103,6 +112,8 @@ namespace FitnessGuru_Main.Controllers.Api
 
         }
 
+
+        // API to get list of sessions joined by a user
         [HttpGet]
         public IEnumerable<SessionDto> GetJoinedSessionsForTable(string id)
         {
@@ -118,7 +129,7 @@ namespace FitnessGuru_Main.Controllers.Api
         }
 
 
-        //GET /api/sessions/id
+        //API to get a single sessions details
         public IHttpActionResult GetSession(int id)
         {
             var session = db.Sessions.SingleOrDefault(c => c.Id == id);
@@ -127,6 +138,8 @@ namespace FitnessGuru_Main.Controllers.Api
             return Ok(Mapper.Map<Session, SessionDto>(session));
         }
 
+
+        // API to submit feedback 
         [HttpPost]
         public IHttpActionResult SubmitFeedback(SessionFeedbackSubmitModel model)
         {
@@ -145,11 +158,13 @@ namespace FitnessGuru_Main.Controllers.Api
 
             if (userFeedbackForSession != null)
             {
+                // if the feedback already present, modify the earlier feedback
                 userFeedbackForSession.Desc = sessionFeedback.Desc;
                 userFeedbackForSession.Rating = sessionFeedback.Rating;
             }
             else
             {
+                // add as the new feedback
                 session.SessionFeedbacks.Add(sessionFeedback);
             }
 
@@ -161,7 +176,7 @@ namespace FitnessGuru_Main.Controllers.Api
         }
 
 
-        //POST /api/createsession
+        //API to create a new session
         [HttpPost]
         public IHttpActionResult CreateSession(SessionCreateDto sessionDto)
         {
@@ -187,6 +202,7 @@ namespace FitnessGuru_Main.Controllers.Api
         }
 
 
+        // API to update a new session
         [HttpPut]
         public void UpdateSession(SessionEditDto sessionDto)
         {
@@ -201,6 +217,7 @@ namespace FitnessGuru_Main.Controllers.Api
             if (sessionInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+            // map the new details onto existing session object from DB
             Mapper.Map(sessionDto, sessionInDb);
 
             db.Entry(sessionInDb).State = EntityState.Modified;
