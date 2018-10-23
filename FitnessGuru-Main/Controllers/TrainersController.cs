@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using FitnessGuru_Main.Models;
+using FitnessGuru_Main.utils;
 using Microsoft.AspNet.Identity;
 
 namespace FitnessGuru_Main.Controllers
@@ -23,21 +24,23 @@ namespace FitnessGuru_Main.Controllers
             GymMember user = db.GymMembers.Where(c => c.UserId == userId).FirstOrDefault();
 
             ViewBag.Name = user.FirstName;
-
+            //            var currentTime = DateTime.Now.ToLocalTime();
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
             var sessions = db.Sessions
-                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                 .Include(s => s.GymMember)
                 .ToList();
 
             var UpcomingSessions = sessions
-                                      .Where(c => c.TrainerId != user.Id && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                                      .Where(c => c.TrainerId != user.Id && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                                       .OrderBy(c => c.SessionAt)
                                       .ToList();
 
 
 
             var ManagingSessions = sessions
-                .Where(c => c.TrainerId == user.Id && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .Where(c => c.TrainerId == user.Id && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                 .OrderBy(c => c.SessionAt)
                 .ToList();
 
@@ -56,8 +59,10 @@ namespace FitnessGuru_Main.Controllers
             var TrainerId = User.Identity.GetUserId();
             var user = db.GymMembers.Where(c => c.UserId == TrainerId).FirstOrDefault();
 
-
-            var sessions = user.Sessions.Where(c => !c.isCancelled && DateTime.Compare(c.SessionAt, DateTime.Now) <= 0);
+            //            var currentTime = DateTime.Now.ToLocalTime();
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
+            var sessions = user.Sessions.Where(c => !c.isCancelled && DateTime.Compare(c.SessionAt, currentTime) <= 0);
 
             return View(sessions);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using FitnessGuru_Main.Models;
@@ -186,5 +187,20 @@ namespace FitnessGuru_Main.utils
             "We regret to inform you that the session has been cancelled. Please plan accordingly.";
 
 
+    }
+
+
+    public static class Util
+    {
+        public static DateTime ParseDateExactForTimeZone(DateTime dateTime)
+        {
+            var timezone = TimeZoneInfo.FindSystemTimeZoneById("AUS Eastern Standard Time");
+            //            var parsedDateLocal = DateTimeOffset.ParseExact(dateTime, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+            //            var tzOffset = timezone.GetUtcOffset(parsedDateLocal.DateTime);
+            //            var parsedDateTimeZone = new DateTimeOffset(parsedDateLocal.DateTime, tzOffset);
+            //            return parsedDateTimeZone;
+
+            return TimeZoneInfo.ConvertTimeFromUtc(dateTime, timezone);
+        }
     }
 }

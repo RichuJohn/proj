@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Http.Results;
 using System.Web.Mvc;
@@ -37,8 +38,14 @@ namespace FitnessGuru_Main.Controllers
             ViewBag.Name = user.FirstName;
 
             // get the list of upcoming sessions that have not been cancelled
+            //            var currentTime = DateTime.Now.ToLocalTime();
+
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
+            ViewBag.CurrentTime = currentTime.ToString("yyyy-MM-dd HH:mm");
+
             var sessions = db.Sessions
-                                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                                 .Include(s => s.GymMember)
                                 .ToList();
 
@@ -50,10 +57,9 @@ namespace FitnessGuru_Main.Controllers
                     .ToList();
 
 
-
             // get the list of sessions the user has joined
             var joinedSessions = user.JoinedSessions
-                    .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                    .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                     .OrderBy(c => c.SessionAt)
                     .ToList();
 
@@ -94,8 +100,11 @@ namespace FitnessGuru_Main.Controllers
         public ActionResult ListSessionsCreated()
         {
             var userId = User.Identity.GetUserId();
+            //            var currentTime = DateTime.Now.ToLocalTime();
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
             var user = db.GymMembers.Where(c => c.UserId == userId).First();
-            var sessions = db.Sessions.Where(c => c.TrainerId == user.Id && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0)).Include(s => s.GymMember);
+            var sessions = db.Sessions.Where(c => c.TrainerId == user.Id && (DateTime.Compare(c.SessionAt, currentTime) > 0)).Include(s => s.GymMember);
             return View(sessions.ToList());
         }
 
@@ -141,8 +150,10 @@ namespace FitnessGuru_Main.Controllers
         {
             var userId = User.Identity.GetUserId();
             var user = db.GymMembers.Where(c => c.UserId == userId).First();
-
-            var sessions = user.JoinedSessions.Where(c => !c.isCancelled && DateTime.Compare(c.SessionAt, DateTime.Now) <= 0);
+            //            var currentTime = DateTime.Now.ToLocalTime();
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
+            var sessions = user.JoinedSessions.Where(c => !c.isCancelled && DateTime.Compare(c.SessionAt, currentTime) <= 0);
 
             return View(sessions);
         }

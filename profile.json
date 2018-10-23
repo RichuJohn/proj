@@ -1,0 +1,113 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appService_FitnessGuru_name": {
+      "type": "string"
+    },
+    "appServicePlan_AzureWebApp20181016044131Plan_location": {
+      "type": "string"
+    },
+    "appServicePlan_AzureWebApp20181016044131Plan_name": {
+      "type": "string"
+    },
+    "appServicePlan_AzureWebApp20181016044131Plan_resourceGroup": {
+      "type": "string"
+    },
+    "dbserver_fitnessgurudbserver_name": {
+      "type": "string"
+    },
+    "dbserver_fitnessgurudbserver_adminlogin": {
+      "type": "string"
+    },
+    "dbserver_fitnessgurudbserver_adminpassword": {
+      "type": "securestring"
+    },
+    "dbserver_fitnessgurudbserver_location": {
+      "type": "string"
+    },
+    "dbserver_fitnessgurudbserver_FitnessGuruDB_name": {
+      "type": "string"
+    },
+    "dbserver_fitnessgurudbserver_FitnessGuruDB_location": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "location": "[parameters('appServicePlan_AzureWebApp20181016044131Plan_location')]",
+      "name": "[parameters('appService_FitnessGuru_name')]",
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2015-08-01",
+      "tags": {
+        "[concat('hidden-related:', resourceId(parameters('appServicePlan_AzureWebApp20181016044131Plan_resourceGroup'),'Microsoft.Web/serverfarms', parameters('appServicePlan_AzureWebApp20181016044131Plan_name')))]": "empty"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Sql/servers/', parameters('dbserver_fitnessgurudbserver_name'))]"
+      ],
+      "kind": "app",
+      "properties": {
+        "name": "[parameters('appService_FitnessGuru_name')]",
+        "serverFarmId": "[resourceId(parameters('appServicePlan_AzureWebApp20181016044131Plan_resourceGroup'),'Microsoft.Web/serverfarms', parameters('appServicePlan_AzureWebApp20181016044131Plan_name'))]",
+        "kind": "app"
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "resources": [
+        {
+          "name": "connectionstrings",
+          "type": "config",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[concat('Microsoft.Web/Sites/', parameters('appService_FitnessGuru_name'))]"
+          ],
+          "properties": {
+            "DefaultConnection": {
+              "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('dbserver_fitnessgurudbserver_name'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('dbserver_fitnessgurudbserver_FitnessGuruDB_name'), ';User Id=', parameters('dbserver_fitnessgurudbserver_adminlogin'), '@', parameters('dbserver_fitnessgurudbserver_name'), ';Password=', parameters('dbserver_fitnessgurudbserver_adminpassword'))]",
+              "type": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "location": "[parameters('dbserver_fitnessgurudbserver_location')]",
+      "name": "[parameters('dbserver_fitnessgurudbserver_name')]",
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2014-04-01-preview",
+      "properties": {
+        "administratorLogin": "[parameters('dbserver_fitnessgurudbserver_adminlogin')]",
+        "administratorLoginPassword": "[parameters('dbserver_fitnessgurudbserver_adminpassword')]"
+      },
+      "resources": [
+        {
+          "location": "[parameters('dbserver_fitnessgurudbserver_location')]",
+          "name": "AllowAllAzureIPs",
+          "type": "firewallrules",
+          "apiVersion": "2014-04-01",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('dbserver_fitnessgurudbserver_name'))]"
+          ],
+          "properties": {
+            "endIpAddress": "0.0.0.0",
+            "startIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "location": "[parameters('dbserver_fitnessgurudbserver_FitnessGuruDB_location')]",
+          "name": "[parameters('dbserver_fitnessgurudbserver_FitnessGuruDB_name')]",
+          "type": "databases",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[concat('Microsoft.Sql/servers/', parameters('dbserver_fitnessgurudbserver_name'))]"
+          ],
+          "properties": {
+            "collation": "SQL_Latin1_General_CP1_CI_AS",
+            "maxSizeBytes": "1073741824"
+          }
+        }
+      ]
+    }
+  ]
+}

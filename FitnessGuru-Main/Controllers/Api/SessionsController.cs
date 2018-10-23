@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Web.Http;
 using System.Web.Services.Protocols;
 using System.Web.UI;
@@ -33,8 +34,11 @@ namespace FitnessGuru_Main.Controllers.Api
         [HttpGet]
         public IEnumerable<SessionCalendarDto> GetUpcomingSessionsForCalendar()
         {
+            //            var currentTime = DateTime.Now.ToLocalTime();
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
             return db.Sessions
-                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                 .ToList().Select(Mapper.Map<Session, SessionCalendarDto>);
         }
 
@@ -44,8 +48,11 @@ namespace FitnessGuru_Main.Controllers.Api
         [HttpGet]
         public IEnumerable<SessionCalendarDto> GetUpcomingSessionsForCalendar(int id)
         {
+            //            var currentTime = DateTime.Now.ToLocalTime();
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
             return db.Sessions
-                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0) && c.TrainerId == id)
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0) && c.TrainerId == id)
                 .ToList().Select(Mapper.Map<Session, SessionCalendarDto>);
         }
 
@@ -58,17 +65,18 @@ namespace FitnessGuru_Main.Controllers.Api
             var user = db.GymMembers.Find(id);
             if (user == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-
-
+            //            var currentTime = DateTime.Now.ToLocalTime();
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
             var joinedSessions = user.JoinedSessions
-                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0));
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0));
 
 
             var joinedSessionDto = joinedSessions.Select(Mapper.Map<Session, JoinedSessionDto>)
                 .Select(Mapper.Map<JoinedSessionDto, MemberSessionDto>);
 
             var sessions = db.Sessions.Include(c => c.GymMembers)
-                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                 .ToList();
 
             List<Session> rlist = new List<Session>();
@@ -96,9 +104,11 @@ namespace FitnessGuru_Main.Controllers.Api
             var user = db.GymMembers.SingleOrDefault(c => c.UserId == id);
             if (user == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-
+            //            var currentTime = DateTime.Now.ToLocalTime();
+//            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
             var sessions = db.Sessions.Include(c => c.GymMembers)
-                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                 .ToList();
 
             List<Session> rlist = new List<Session>();
@@ -121,9 +131,11 @@ namespace FitnessGuru_Main.Controllers.Api
             if (user == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-
+            //            var currentTime = DateTime.Now.ToLocalTime();
+            //            var currentTime = Util.ParseDateExactForTimeZone(DateTime.Now.ToString("yyyy-MM-dd HH:mm")).DateTime;
+            var currentTime = Util.ParseDateExactForTimeZone(DateTime.UtcNow);
             var sessions = user.JoinedSessions
-                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, DateTime.Now) > 0))
+                .Where(c => !c.isCancelled && (DateTime.Compare(c.SessionAt, currentTime) > 0))
                 .ToList().Select(Mapper.Map<Session, SessionDto>);
             return sessions;
         }
